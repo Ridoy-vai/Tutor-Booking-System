@@ -1,5 +1,6 @@
 import React from 'react';
-import { Clock, Heart, Video, BarChart, Star, ArrowRight, BookOpen, GraduationCap, MapPin, Link } from 'lucide-react';
+import { Clock, Heart, Video, BarChart, Star, ArrowRight, BookOpen, GraduationCap, MapPin, } from 'lucide-react';
+import Link from 'next/link';
 
 const CourseCard = ({ tutors }) => {
     return (
@@ -54,18 +55,17 @@ const CourseCard = ({ tutors }) => {
                         </div>
                     </div>
 
-                    <div className="border-t border-dashed border-gray-200 pt-5 flex items-center justify-between">
+                    <div className=" flex border-t border-dashed border-gray-200 pt-5 flex items-center justify-between">
                         <div className="flex flex-col">
                             <span className="text-[10px] uppercase font-bold text-gray-400 tracking-widest">Experience</span>
                             <span className="text-sm font-bold text-gray-700">{tutor.experience}</span>
                         </div>
-                        <Link
-                            href={`/tutors/${tutor._id}`}
-                            className="p-2.5 bg-gray-50 hover:bg-purple-600 text-purple-600 hover:text-white rounded-xl transition-colors group/btn"
-                        >
-                            <ArrowRight size={20} className="group-hover/btn:translate-x-1 transition-transform" />
-                        </Link>
+
                     </div>
+                    <button className="flex items-center w-full gap-1 text-sm font-semibold bg-amber-500 border-amber-500 hover:bg-amber-600 text-white py-2 rounded-md justify-center mt-4 transition-colors duration-300">
+                       <Link href={`/tutors/${tutor._id}`}> View Profile</Link>
+                    </button>
+
                 </div>
             </div>
 

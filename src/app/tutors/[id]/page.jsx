@@ -1,0 +1,162 @@
+import React from 'react';
+import {
+    FaUser, FaEnvelope, FaBook, FaMapMarkerAlt,
+    FaClock, FaUniversity, FaChalkboardTeacher,
+    FaMoneyBill, FaCalendarAlt, FaStar, FaCheckCircle
+} from 'react-icons/fa';
+
+const TutorProfilePage = async ({ params }) => {
+    const { id } = await params; // or: const { id } = await params;
+
+    console.log("Received ID:", id);
+
+    const res = await fetch(`http://localhost:1000/tutors/${id}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+
+    if (!res.ok) {
+        return <div>Failed to load tutor</div>;
+    }
+
+    const data = await res.json();
+    return (
+        <div className="min-h-screen bg-slate-50 py-10 px-4 md:px-8">
+            <div className="max-w-7xl mx-auto">
+
+                {/* Main Grid Layout */}
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+                    {/* LEFT & MIDDLE CONTENT (8 Columns) */}
+                    <div className="lg:col-span-8 space-y-6">
+
+                        {/* 1. Header Card */}
+                        <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 flex flex-col md:flex-row gap-8 items-center md:items-start">
+                            <div className="relative">
+                                <img
+                                    src={data?.photoUrl}
+                                    alt={data?.fullName}
+                                    className="w-48 h-48 md:w-60 md:h-60 object-cover rounded-2xl shadow-lg ring-4 ring-white"
+                                />
+                                <span className="absolute -bottom-3 -right-3 bg-green-500 text-white p-2 rounded-full shadow-lg">
+                                    <FaCheckCircle size={20} />
+                                </span>
+                            </div>
+
+                            <div className="flex-1 text-center md:text-left">
+                                <div className="flex flex-col md:flex-row md:items-center gap-3 mb-2">
+                                    <h1 className="text-4xl font-extrabold text-gray-800">{data?.fullName}</h1>
+                                    <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-semibold w-fit mx-auto md:mx-0">
+                                        Verified Tutor
+                                    </span>
+                                </div>
+                                <p className="text-gray-500 flex items-center justify-center md:justify-start gap-2 text-lg mb-4">
+                                    <FaEnvelope className="text-blue-500" /> {data?.email}
+                                </p>
+                                <div className="flex flex-wrap justify-center md:justify-start gap-4">
+                                    <div className="bg-amber-50 px-4 py-2 rounded-xl border border-amber-100">
+                                        <p className="text-xs text-amber-600 font-bold uppercase tracking-wider">Rating</p>
+                                        <p className="text-lg font-bold flex items-center gap-1">4.9 <FaStar className="text-amber-500" size={16} /></p>
+                                    </div>
+                                    <div className="bg-indigo-50 px-4 py-2 rounded-xl border border-indigo-100">
+                                        <p className="text-xs text-indigo-600 font-bold uppercase tracking-wider">Hourly Fee</p>
+                                        <p className="text-lg font-bold text-indigo-700">৳ {data?.hourlyFee}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* 2. Details Grid Card */}
+                        <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100">
+                            <h3 className="text-xl font-bold mb-6 border-b pb-4">Professional Information</h3>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                <InfoItem icon={<FaBook color="#3b82f6" />} label="Subject" value={data?.subject} />
+                                <InfoItem icon={<FaUniversity color="#8b5cf6" />} label="Institution" value={data?.institution} />
+                                <InfoItem icon={<FaMapMarkerAlt color="#ef4444" />} label="Location" value={data?.location} />
+                                <InfoItem icon={<FaClock color="#10b981" />} label="Experience" value={data?.experience} />
+                                <InfoItem icon={<FaChalkboardTeacher color="#f59e0b" />} label="Teaching Mode" value={data?.teachingMode} />
+                                <InfoItem icon={<FaCalendarAlt color="#6366f1" />} label="Joining Date" value={data?.startDate} />
+                            </div>
+
+                            <div className="mt-8">
+                                <h4 className="text-gray-900 font-bold mb-3">Availability & Schedule</h4>
+                                <div className="bg-blue-50 p-5 rounded-2xl border border-blue-100 flex items-start gap-4">
+                                    <div className="bg-blue-500 p-3 rounded-xl text-white">
+                                        <FaClock size={20} />
+                                    </div>
+                                    <p className="text-blue-900 font-medium leading-relaxed">
+                                        {data?.availability}
+                                        <br />
+                                        <span className="text-blue-600 text-sm font-bold uppercase">{data.totalSlots}</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* RIGHT SIDE: BOOKING FORM (4 Columns) */}
+                    <div className="lg:col-span-4">
+                        <div className="bg-white rounded-3xl p-6 shadow-xl border border-gray-100 sticky top-10">
+                            <h3 className="text-2xl font-bold text-gray-800 mb-6">Book a Session</h3>
+
+                            <form className="space-y-4">
+                                <div>
+                                    <label className="block text-sm font-semibold text-gray-700 mb-2">Full Name</label>
+                                    <input
+                                        type="text"
+                                        placeholder="Enter your name"
+                                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-semibold text-gray-700 mb-2">Preferred Date</label>
+                                    <input
+                                        type="date"
+                                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-semibold text-gray-700 mb-2">Message (Optional)</label>
+                                    <textarea
+                                        placeholder="Write your requirements..."
+                                        rows="4"
+                                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                                    ></textarea>
+                                </div>
+
+                                <button
+                                    type="submit"
+                                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-blue-200 transition-all transform active:scale-95"
+                                >
+                                    Confirm Booking Request
+                                </button>
+
+                                <p className="text-center text-xs text-gray-400 mt-4">
+                                    No payment needed now. Tutor will contact you shortly.
+                                </p>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    );
+};
+
+// Helper Component for Info Items
+const InfoItem = ({ icon, label, value }) => (
+    <div className="flex items-center gap-4 p-3 hover:bg-gray-50 rounded-xl transition-colors">
+        <div className="text-xl">{icon}</div>
+        <div>
+            <p className="text-xs text-gray-400 font-bold uppercase tracking-wide">{label}</p>
+            <p className="text-gray-700 font-semibold">{value}</p>
+        </div>
+    </div>
+);
+
+export default TutorProfilePage;

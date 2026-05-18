@@ -2,64 +2,66 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { authClient } from "@/lib/auth-client";
+import { useState } from "react";
 
-import {
-  Dropdown,
-  DropdownTrigger,
-  DropdownMenu,
-  DropdownItem,
-  DropdownSection,
-  DropdownLabel,
-  DropdownPopover,
-  Avatar,
-} from "@heroui/react";
-
-import {
-  ArrowRightFromSquare,
-  Gear,
-  Persons,
-} from "@gravity-ui/icons";
-
-const navLinks = [
-  { label: "Home", href: "/" },
-  { label: "Features", href: "/features" },
-  { label: "Tutors", href: "/tutors" },
-  { label: "Add Tutor", href: "/addTutor" },
-  { label: "My Tutors", href: "/myTutors" },
-  { label: "Booked Sessions", href: "/bookedSessions" },
-];
+// import {
+//   ArrowRightFromSquare,
+//   Gear,
+//   Persons,
+//   Menu,
+//   X,
+// } from "@gravity-ui/icons";
+import { Avatar, Dropdown, DropdownItem, DropdownMenu, DropdownPopover, DropdownSection, DropdownTrigger } from "@heroui/react";
+import { Menu, X } from "lucide-react";
 
 export default function HeroNavbar() {
   const pathname = usePathname();
+  const { data: session } = authClient.useSession();
+
+  const user = session?.user;
+  const logedin = !!user;
+
+  const [open, setOpen] = useState(false);
+
+  const navLinks = [
+    { label: "Home", href: "/" },
+    { label: "Features", href: "/features" },
+    { label: "Tutors", href: "/tutors" },
+    ...(logedin
+      ? [
+          { label: "Add Tutor", href: "/addTutor" },
+          { label: "My Tutors", href: "/myTutors" },
+          { label: "Booked Sessions", href: "/bookedSessions" },
+        ]
+      : []),
+  ];
+
+  const handleSignOut = async () => {
+    await authClient.signOut({ callbackURL: "/" });
+  };
 
   return (
-    <nav className="w-full border-b border-gray-200 bg-white shadow-sm">
+    <nav className="w-full border-b bg-white shadow-sm">
       <div className="flex items-center justify-between px-6 py-3">
 
         {/* Logo */}
-        <div className="flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-black text-white">
-            H
-          </div>
+        <div className="text-xl font-bold">Hero</div>
 
-          <span className="text-lg font-semibold tracking-tight text-gray-900">
-            Hero
-          </span>
-        </div>
-
-        {/* Nav Links */}
-        <div className="flex items-center gap-2">
+        {/* Desktop Links */}
+        <div className="hidden md:flex items-center gap-2">
           {navLinks.map((link) => {
-            const isActive = pathname === link.href;
+            const active = pathname === link.href;
 
             return (
               <Link
-                key={link.label}
+                key={link.href}
                 href={link.href}
-                className={`rounded-lg px-4 py-2 text-sm transition-all duration-200 ${isActive
-                    ? "bg-black text-white font-semibold"
-                    : "text-gray-500 hover:bg-gray-100 hover:text-gray-900"
-                  }`}
+                className={`px-4 py-2 rounded-lg text-sm transition ${
+                  active
+                    ? "bg-black text-white"
+                    : "text-gray-600 hover:bg-gray-100"
+                }`}
               >
                 {link.label}
               </Link>
@@ -68,78 +70,94 @@ export default function HeroNavbar() {
         </div>
 
         {/* Right Side */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
 
-          {/* Search */}
-          <Link href={'/Authentication'}>
-            <button className="text-gray-500 hover:text-black">
-              🔍
-            </button></Link>
+          {/* Auth */}
+          {!logedin ? (
+            <>
+              <Link href="/authentication/login" className="text-gray-600">
+                Login
+              </Link>
 
-          {/* Notification */}
-          <button className="text-gray-500 hover:text-black">
-            🔔
-          </button>
-
-          {/* Dropdown */}
-          <Dropdown placement="bottom-end">
-            <DropdownTrigger>
-              <div>
+              <Link href="/authentication/signup" className="text-gray-600">
+                Signup
+              </Link>
+            </>
+          ) : (
+            <Dropdown placement="bottom-end">
+              <DropdownTrigger>
                 <Avatar
-                  src="https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/avatars/orange.jpg"
+                  src="https://img.heroui.chat/image/avatar?w=400&h=400&u=3"
                   className="cursor-pointer"
                 />
-              </div>
-            </DropdownTrigger>
+              </DropdownTrigger>
 
-            <DropdownPopover>
-              <DropdownMenu aria-label="Profile Actions">
+              <DropdownPopover>
+                <DropdownMenu>
 
-                <DropdownSection showDivider>
-                  <DropdownItem key="profile" textValue="Profile">
-                    <div className="flex flex-col">
-                      <span className="font-semibold">Jane Doe</span>
-                      <span className="text-xs text-gray-500">
-                        jane@example.com
-                      </span>
+                  <DropdownSection showDivider>
+                    <DropdownItem key="profile">
+                      <div>
+                        <p className="font-semibold">{user?.name}</p>
+                        <p className="text-xs text-gray-500">{user?.email}</p>
+                      </div>
+                    </DropdownItem>
+                  </DropdownSection>
+
+                  <DropdownItem key="dashboard">Dashboard</DropdownItem>
+
+                  <DropdownItem key="settings">
+                    <div className="flex justify-between">
+                      Settings 
                     </div>
                   </DropdownItem>
-                </DropdownSection>
 
-                <DropdownItem key="dashboard">
-                  Dashboard
-                </DropdownItem>
+                  <DropdownItem key="team">
+                    <div className="flex justify-between">
+                      Create Team 
+                    </div>
+                  </DropdownItem>
 
-                <DropdownItem key="settings">
-                  <div className="flex items-center justify-between">
-                    <span>Settings</span>
-                    <Gear className="size-4" />
-                  </div>
-                </DropdownItem>
+                  <DropdownItem
+                    key="logout"
+                    className="text-red-500"
+                    onClick={handleSignOut}
+                  >
+                    <div className="flex justify-between">
+                      Logout 
+                    </div>
+                  </DropdownItem>
 
-                <DropdownItem key="team">
-                  <div className="flex items-center justify-between">
-                    <span>Create Team</span>
-                    <Persons className="size-4" />
-                  </div>
-                </DropdownItem>
+                </DropdownMenu>
+              </DropdownPopover>
+            </Dropdown>
+          )}
 
-                <DropdownItem
-                  key="logout"
-                  className="text-red-500"
-                  color="danger"
-                >
-                  <div className="flex items-center justify-between">
-                    <span>Logout</span>
-                    <ArrowRightFromSquare className="size-4" />
-                  </div>
-                </DropdownItem>
-
-              </DropdownMenu>
-            </DropdownPopover>
-          </Dropdown>
+          {/* Mobile Menu Button */}
+          <button
+            className="md:hidden"
+            onClick={() => setOpen(!open)}
+          >
+            {open ? <X /> : <Menu />}
+          </button>
         </div>
       </div>
+
+      {/* Mobile Menu */}
+      {open && (
+        <div className="md:hidden px-6 pb-4 flex flex-col gap-2">
+          {navLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="py-2 text-gray-700"
+              onClick={() => setOpen(false)}
+            >
+              {link.label}
+            </Link>
+          ))}
+        </div>
+      )}
     </nav>
   );
 }
