@@ -21,6 +21,7 @@ import {
 } from "@gravity-ui/icons";
 
 const navLinks = [
+  { label: "Home", href: "/" },
   { label: "Features", href: "/features" },
   { label: "Tutors", href: "/tutors" },
   { label: "Add Tutor", href: "/addTutor" },
@@ -34,7 +35,7 @@ export default function HeroNavbar() {
   return (
     <nav className="w-full border-b border-gray-200 bg-white shadow-sm">
       <div className="flex items-center justify-between px-6 py-3">
-        
+
         {/* Logo */}
         <div className="flex items-center gap-2">
           <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-black text-white">
@@ -55,11 +56,10 @@ export default function HeroNavbar() {
               <Link
                 key={link.label}
                 href={link.href}
-                className={`rounded-lg px-4 py-2 text-sm transition-all duration-200 ${
-                  isActive
+                className={`rounded-lg px-4 py-2 text-sm transition-all duration-200 ${isActive
                     ? "bg-black text-white font-semibold"
                     : "text-gray-500 hover:bg-gray-100 hover:text-gray-900"
-                }`}
+                  }`}
               >
                 {link.label}
               </Link>
@@ -69,11 +69,12 @@ export default function HeroNavbar() {
 
         {/* Right Side */}
         <div className="flex items-center gap-4">
-          
+
           {/* Search */}
-          <button className="text-gray-500 hover:text-black">
-            🔍
-          </button>
+          <Link href={'/Authentication'}>
+            <button className="text-gray-500 hover:text-black">
+              🔍
+            </button></Link>
 
           {/* Notification */}
           <button className="text-gray-500 hover:text-black">
@@ -83,17 +84,17 @@ export default function HeroNavbar() {
           {/* Dropdown */}
           <Dropdown placement="bottom-end">
             <DropdownTrigger>
-              <button>
+              <div>
                 <Avatar
                   src="https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/avatars/orange.jpg"
                   className="cursor-pointer"
                 />
-              </button>
+              </div>
             </DropdownTrigger>
 
             <DropdownPopover>
               <DropdownMenu aria-label="Profile Actions">
-                
+
                 <DropdownSection showDivider>
                   <DropdownItem key="profile" textValue="Profile">
                     <div className="flex flex-col">
