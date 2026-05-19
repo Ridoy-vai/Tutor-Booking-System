@@ -2,11 +2,10 @@
 
 import { authClient } from '@/lib/auth-client';
 import { Button, Description, FieldError, Form, Input, Label, TextField } from '@heroui/react';
-import { Check } from 'lucide-react';
 import React, { useState } from 'react';
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
-const page = () => {
+const Page = () => {
 
   const [view, setView] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -140,11 +139,11 @@ const page = () => {
       </button>
       <div className="mt-4">
         <a href="/authentication/signup" className="text-blue-500 hover:underline">
-          Don't have an account? Register
+          Don&apos;t have an account? Register
         </a>
       </div>
     </div>
   );
 };
 
-export default page;
+export default Page;

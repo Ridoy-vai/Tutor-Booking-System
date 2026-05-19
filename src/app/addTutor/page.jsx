@@ -1,30 +1,46 @@
 'use client';
 
+import { authClient } from "@/lib/auth-client";
+import { u } from "framer-motion/client";
+
 const Page = () => {
-  const handleSubmit = async(e) => {
+  const { data: session } = authClient.useSession();
+  const user = session?.user;
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
     const formData = new FormData(e.target);
     const tutor = Object.fromEntries(formData.entries());
-    console.log("Form Data Submitted:", tutor);
 
-     const res = await fetch(`http://localhost:1000/tutors`, {
-      method: "POST",
-      headers: {  "Content-Type": "application/json" },
-      body: JSON.stringify(tutor),
-    })
-      .then((response) => response.json())
-      .then((result) => {
-        console.log("Tutor added successfully:", result);
-        // Optionally, reset the form or show a success message
-      })
-      .catch((error) => {
-        console.error("Error adding tutor:", error);
+    const tutorData = {
+      userId: user?.id,
+      userName: user?.name,
+      userEmail: user?.email,
+      userPhoto: user?.image,
+
+      ...tutor, // 👈 form data merge
+    };
+
+    try {
+      const res = await fetch(`http://localhost:1000/tutors`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(tutorData),
       });
-  };
 
+      const result = await res.json();
+      console.log("Tutor added successfully:", result);
+
+      // optional: form reset
+      e.target.reset();
+
+    } catch (error) {
+      console.error("Error adding tutor:", error);
+    }
+  };
   return (
     <form onSubmit={handleSubmit} className="max-w-6xl w-full mt-1 mx-auto p-6 bg-white shadow-sm rounded-xl space-y-6">
-      
+
       {/* Personal Info Section */}
       <div className="space-y-4 ">
         <h3 className="text-sm font-bold uppercase text-gray-400 border-b pb-2">Personal Info</h3>
@@ -73,7 +89,20 @@ const Page = () => {
 
         <div className="flex flex-col gap-1.5">
           <label className="text-xs text-gray-500">Availability</label>
-          <input name="availability" type="text" placeholder="Sun-Thu 5:00 PM - 8:00 PM" className="w-full text-sm px-3 py-2 rounded-lg border border-gray-200 outline-none focus:border-purple-400" />
+
+          <div className="grid grid-cols-2 gap-3">
+            <input
+              name="startTime"
+              type="time"
+              className="w-full text-sm px-3 py-2 rounded-lg border border-gray-200 outline-none focus:border-purple-400"
+            />
+
+            <input
+              name="endTime"
+              type="time"
+              className="w-full text-sm px-3 py-2 rounded-lg border border-gray-200 outline-none focus:border-purple-400"
+            />
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -103,10 +132,43 @@ const Page = () => {
           </div>
           <div className="flex flex-col gap-1.5">
             <label className="text-xs text-gray-500">Teaching Mode</label>
+
             <div className="flex gap-2">
-              <button type="button" className="flex-1 py-2 border rounded-lg text-xs hover:bg-purple-50 transition-colors">Online</button>
-              <button type="button" className="flex-1 py-2 border rounded-lg text-xs hover:bg-purple-50 transition-colors">Offline</button>
-              <button type="button" className="flex-1 py-2 border rounded-lg text-xs hover:bg-purple-50 transition-colors">Both</button>
+              <label className="cursor-pointer flex-1">
+                <input
+                  type="radio"
+                  name="teachingMode"
+                  value="Online"
+                  className="hidden peer"
+                />
+                <div className="py-2 text-center border rounded-lg text-xs transition-all peer-checked:bg-purple-500 peer-checked:text-white peer-checked:border-purple-500 hover:bg-purple-50 hover:text-black">
+                  Online
+                </div>
+              </label>
+
+              <label className="cursor-pointer flex-1">
+                <input
+                  type="radio"
+                  name="teachingMode"
+                  value="Offline"
+                  className="hidden peer"
+                />
+                <div className="py-2 text-center border rounded-lg text-xs transition-all peer-checked:bg-purple-500 peer-checked:text-white peer-checked:border-purple-500 hover:bg-purple-50 hover:text-black">
+                  Offline
+                </div>
+              </label>
+
+              <label className="cursor-pointer flex-1">
+                <input
+                  type="radio"
+                  name="teachingMode"
+                  value="Both"
+                  className="hidden peer"
+                />
+                <div className="py-2 text-center border rounded-lg text-xs transition-all peer-checked:bg-purple-500 peer-checked:text-white peer-checked:border-purple-500 hover:bg-purple-50 hover:text-black">
+                  Both
+                </div>
+              </label>
             </div>
           </div>
         </div>
@@ -114,8 +176,8 @@ const Page = () => {
 
       {/* Submit Button */}
       <div className="pt-6">
-        <button 
-          type="submit" 
+        <button
+          type="submit"
           className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 rounded-lg transition-all duration-200"
         >
           Post Tuition

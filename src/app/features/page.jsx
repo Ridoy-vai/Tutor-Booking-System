@@ -12,98 +12,12 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 
-const tutors = [
-  {
-    "_id": "6a0a8603a2f0fea39c7b2a42",
-    "photoUrl": "https://randomuser.me/api/portraits/men/1.jpg",
-    "fullName": "Rahim Ahmed",
-    "email": "rahim.ahmed@example.com",
-    "subject": "Mathematics",
-    "location": "Mirpur, Dhaka",
-    "experience": "3 years experience",
-    "availability": "Sun, Tue, Thu (5-8 PM)",
-    "hourlyFee": 500,
-    "totalSlots": 5,
-    "startDate": "2024-05-20",
-    "institution": "BUET",
-    "teachingMode": "Both"
-  },
-  {
-    "_id": "6a0a8603a2f0fea39c7b2a43",
-    "photoUrl": "https://randomuser.me/api/portraits/women/2.jpg",
-    "fullName": "Sumaiya Akhter",
-    "email": "sumaiya.edu@example.com",
-    "subject": "English",
-    "location": "Chawkbazar, Ctg",
-    "experience": "5 years experience",
-    "availability": "Mon, Wed, Sat (4-6 PM)",
-    "hourlyFee": 800,
-    "totalSlots": 3,
-    "startDate": "2024-06-01",
-    "institution": "Dhaka University",
-    "teachingMode": "Online"
-  },
-  {
-    "_id": "6a0a8603a2f0fea39c7b2a44",
-    "photoUrl": "https://randomuser.me/api/portraits/men/3.jpg",
-    "fullName": "Tanvir Hasan",
-    "email": "tanvir.phy@example.com",
-    "subject": "Physics",
-    "location": "Khulna City",
-    "experience": "2 years experience",
-    "availability": "Everyday (7-9 PM)",
-    "hourlyFee": 400,
-    "totalSlots": 10,
-    "startDate": "2024-05-25",
-    "institution": "KUET",
-    "teachingMode": "Offline"
-  },
-  {
-    "_id": "6a0a8603a2f0fea39c7b2a45",
-    "photoUrl": "https://randomuser.me/api/portraits/women/4.jpg",
-    "fullName": "Nusrat Jahan",
-    "email": "nusrat.chem@example.com",
-    "subject": "Chemistry",
-    "location": "Rajshahi Sadar",
-    "experience": "4 years experience",
-    "availability": "Fri, Sat (10 AM-1 PM)",
-    "hourlyFee": 600,
-    "totalSlots": 4,
-    "startDate": "2024-06-05",
-    "institution": "Rajshahi University",
-    "teachingMode": "Both"
-  },
-  {
-    "_id": "6a0a8603a2f0fea39c7b2a46",
-    "photoUrl": "https://randomuser.me/api/portraits/men/5.jpg",
-    "fullName": "Arifur Rahman",
-    "email": "arif.ict@example.com",
-    "subject": "ICT",
-    "location": "Uttara, Dhaka",
-    "experience": "1 year experience",
-    "availability": "Sun to Thu (8-10 PM)",
-    "hourlyFee": 1000,
-    "totalSlots": 2,
-    "startDate": "2024-05-15",
-    "institution": "NSU",
-    "teachingMode": "Online"
-  },
-  {
-    "_id": "6a0a8603a2f0fea39c7b2a47",
-    "photoUrl": "https://randomuser.me/api/portraits/women/8.jpg",
-    "fullName": "Farhana Islam",
-    "email": "farhana.bio@example.com",
-    "subject": "Biology",
-    "location": "Sylhet City",
-    "experience": "3 years experience",
-    "availability": "Mon, Wed (5-7 PM)",
-    "hourlyFee": 450,
-    "totalSlots": 6,
-    "startDate": "2024-05-30",
-    "institution": "Sylhet Medical",
-    "teachingMode": "Offline"
-  }
-];
+const res = await fetch(`http://localhost:1000/tutors`, {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+    cache: "no-store", // সবসময় fresh data পেতে
+});
+const tutors = await res.json();
 
 const TutorCard = ({ tutor }) => (
   <div className="bg-white rounded-[2rem] shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 group">

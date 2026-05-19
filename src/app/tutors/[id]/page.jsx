@@ -1,3 +1,4 @@
+import BookingForm from '@/Components/BookingForm';
 import React from 'react';
 import {
     FaUser, FaEnvelope, FaBook, FaMapMarkerAlt,
@@ -6,10 +7,12 @@ import {
 } from 'react-icons/fa';
 
 const TutorProfilePage = async ({ params }) => {
+
+
+    //   console.log('session:', session);
+
+
     const { id } = await params; // or: const { id } = await params;
-
-    console.log("Received ID:", id);
-
     const res = await fetch(`http://localhost:1000/tutors/${id}`, {
         method: "GET",
         headers: {
@@ -77,7 +80,7 @@ const TutorProfilePage = async ({ params }) => {
                                 <InfoItem icon={<FaMapMarkerAlt color="#ef4444" />} label="Location" value={data?.location} />
                                 <InfoItem icon={<FaClock color="#10b981" />} label="Experience" value={data?.experience} />
                                 <InfoItem icon={<FaChalkboardTeacher color="#f59e0b" />} label="Teaching Mode" value={data?.teachingMode} />
-                                <InfoItem icon={<FaCalendarAlt color="#6366f1" />} label="Joining Date" value={data?.startDate} />
+                                <InfoItem icon={<FaCalendarAlt color="#6366f1" />} label="Schedule Time: " value={`${data?.startTime} to ${data?.endTime}`} />
                             </div>
 
                             <div className="mt-8">
@@ -87,9 +90,9 @@ const TutorProfilePage = async ({ params }) => {
                                         <FaClock size={20} />
                                     </div>
                                     <p className="text-blue-900 font-medium leading-relaxed">
-                                        {data?.availability}
+                                        End Date: {data?.startDate}
                                         <br />
-                                        <span className="text-blue-600 text-sm font-bold uppercase">{data.totalSlots}</span>
+                                        <span className="text-blue-600 text-sm font-bold uppercase">totalSlots: {data.totalSlots}</span>
                                     </p>
                                 </div>
                             </div>
@@ -97,50 +100,7 @@ const TutorProfilePage = async ({ params }) => {
                     </div>
 
                     {/* RIGHT SIDE: BOOKING FORM (4 Columns) */}
-                    <div className="lg:col-span-4">
-                        <div className="bg-white rounded-3xl p-6 shadow-xl border border-gray-100 sticky top-10">
-                            <h3 className="text-2xl font-bold text-gray-800 mb-6">Book a Session</h3>
-
-                            <form className="space-y-4">
-                                <div>
-                                    <label className="block text-sm font-semibold text-gray-700 mb-2">Full Name</label>
-                                    <input
-                                        type="text"
-                                        placeholder="Enter your name"
-                                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
-                                    />
-                                </div>
-
-                                <div>
-                                    <label className="block text-sm font-semibold text-gray-700 mb-2">Preferred Date</label>
-                                    <input
-                                        type="date"
-                                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
-                                    />
-                                </div>
-
-                                <div>
-                                    <label className="block text-sm font-semibold text-gray-700 mb-2">Message (Optional)</label>
-                                    <textarea
-                                        placeholder="Write your requirements..."
-                                        rows="4"
-                                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
-                                    ></textarea>
-                                </div>
-
-                                <button
-                                    type="submit"
-                                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-blue-200 transition-all transform active:scale-95"
-                                >
-                                    Confirm Booking Request
-                                </button>
-
-                                <p className="text-center text-xs text-gray-400 mt-4">
-                                    No payment needed now. Tutor will contact you shortly.
-                                </p>
-                            </form>
-                        </div>
-                    </div>
+                   <BookingForm data={data}/>
 
                 </div>
             </div>
