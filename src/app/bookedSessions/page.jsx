@@ -89,11 +89,14 @@ const BookedSessions = async () => {
                                             <td className="px-6 py-4">
                                                 <div className="flex items-center gap-2">
                                                     <img
-                                                        src={item.photoUrl}
-                                                        alt={item.TutorName}
+                                                        src={item?.photoUrl || `https://ui-avatars.com/api/?name=${item.TutorName}&background=7c3aed&color=fff`}
+                                                        alt={item.TutorName || "Tutor Avatar"}
                                                         className="w-8 h-8 rounded-full object-cover border border-gray-200"
                                                     />
-                                                    <span className="font-medium text-gray-700 whitespace-nowrap">{item.TutorName}</span>
+                                                    <div className='flex flex-col'>
+                                                        <span className="font-medium text-gray-700 whitespace-nowrap">{item.TutorName}</span>
+                                                        <span className="text-xs text-gray-400">{item.email}</span>
+                                                    </div>
                                                 </div>
                                             </td>
 

@@ -1,3 +1,5 @@
+import { DeletAlert } from '@/Components/DeletAlert';
+import { EaditMybooking } from '@/Components/myTutorAction';
 import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
 import Link from 'next/link';
@@ -7,6 +9,7 @@ const MyTutors = async () => {
         headers: await headers()
     });
     const userId = session?.user?.id;
+    const user = session?.user;
 
     let myTutorsDatas = [];
     try {
@@ -28,19 +31,26 @@ const MyTutors = async () => {
             {/* Header */}
             <div className="mb-10">
                 <p className="text-sm font-semibold text-purple-500 uppercase tracking-widest mb-1">Dashboard</p>
-                <h1 className="text-3xl sm:text-4xl font-bold text-gray-900">আমার টিউটর লিস্ট</h1>
-                <p className="text-gray-500 mt-2 text-sm">আপনার বুক করা সকল টিউটরের তথ্য এখানে দেখুন।</p>
+                <h1 className="text-3xl sm:text-4xl font-bold text-gray-900">My Tutors List</h1>
+                <p className="text-gray-500 mt-2 text-sm">View information about all your booked tutors here.</p>
             </div>
 
             {/* Stats Row */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-10">
                 {[
-                    { label: "মোট টিউটর", value: myTutorsDatas.length, textColor: "text-purple-600" },
-                    { label: "মোট Slots", value: myTutorsDatas.reduce((a, b) => a + (b.totalSlots || 0), 0), textColor: "text-blue-600" },
-                    { label: "গড় ফি (৳)", value: myTutorsDatas.length ? Math.round(myTutorsDatas.reduce((a, b) => a + Number(b.hourlyFee || 0), 0) / myTutorsDatas.length) : 0, textColor: "text-green-600" },
+                    { label: "Total Tutors", value: myTutorsDatas.length, textColor: "text-purple-600" },
+                    {
+                        label: "Total Slots",
+                        value: myTutorsDatas.reduce(
+                            (total, tutor) => total + Number(tutor.totalSlots || 0),
+                            0
+                        ),
+                        textColor: "text-blue-600"
+                    },
+                    { label: "Average Fee (bdt)", value: myTutorsDatas.length ? Math.round(myTutorsDatas.reduce((a, b) => a + Number(b.hourlyFee || 0), 0) / myTutorsDatas.length) : 0, textColor: "text-green-600" },
                     { label: "Subjects", value: new Set(myTutorsDatas.map(t => t.subject)).size, textColor: "text-amber-600" },
                 ].map((stat) => (
-                    <div key={stat.label} className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+                    <div key={stat.label} className="bg-white  p-5 shadow-sm border border-gray-100">
                         <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">{stat.label}</p>
                         <p className={`text-3xl font-bold ${stat.textColor}`}>{stat.value}</p>
                     </div>
@@ -50,12 +60,12 @@ const MyTutors = async () => {
             {myTutorsDatas.length > 0 ? (
                 <>
                     {/* Desktop Table */}
-                    <div className="hidden md:block bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div className="hidden md:block bg-white  shadow-sm border border-gray-100 overflow-hidden">
                         <div className="overflow-x-auto">
                             <table className="w-full text-sm">
                                 <thead>
                                     <tr className="bg-gray-50 border-b border-gray-100">
-                                        {["#", "টিউটর", "Subject", "Availability", "Hourly Fee", "Slots", "Join Date", "Action"].map(col => (
+                                        {["#", "Tutor", "Subject", "Availability", "Hourly Fee", "Slots", "Start Date", "Action"].map(col => (
                                             <th key={col} className="text-left px-6 py-4 text-xs font-semibold text-gray-400 uppercase tracking-wider whitespace-nowrap">
                                                 {col}
                                             </th>
@@ -71,13 +81,14 @@ const MyTutors = async () => {
                                             <td className="px-6 py-4">
                                                 <div className="flex items-center gap-3">
                                                     <img
-                                                        src={item.photoUrl || `https://ui-avatars.com/api/?name=${item.fullName}&background=7c3aed&color=fff`}
-                                                        alt={item.fullName}
+                                                        src={item?.photoUrl || `https://ui-avatars.com/api/?name=${item.fullName}&background=7c3aed&color=fff`}
+                                                        alt={item.fullName || "Tutor Avatar"}
                                                         className="w-9 h-9 rounded-full object-cover border-2 border-purple-100 flex-shrink-0"
                                                     />
                                                     <div>
                                                         <p className="font-semibold text-gray-800 whitespace-nowrap">{item.fullName}</p>
                                                         <p className="text-xs text-gray-400">{item.institution || "—"}</p>
+                                                        {/* <p className="text-xs text-gray-400">{item._id || "—"}</p> */}
                                                     </div>
                                                 </div>
                                             </td>
@@ -91,7 +102,7 @@ const MyTutors = async () => {
 
                                             {/* Availability */}
                                             <td className="px-6 py-4 text-gray-600 text-xs max-w-[160px]">
-                                                {item.startDate || "—"}
+                                                {item.startTime || "—"} to {item.endTime || "—"}
                                             </td>
 
                                             {/* Fee */}
@@ -116,19 +127,16 @@ const MyTutors = async () => {
                                             {/* Date */}
                                             <td className="px-6 py-4 text-gray-600 whitespace-nowrap text-xs">
                                                 {item.startDate
-                                                    ? new Date(item.startDate).toLocaleDateString('bn-BD', { year: 'numeric', month: 'short', day: 'numeric' })
-                                                    : new Date(item.startDate).toLocaleDateString('bn-BD', { year: 'numeric', month: 'short', day: 'numeric' })}
+                                                    ? new Date(item.startDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
+                                                    : new Date(item.startDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
                                             </td>
 
                                             {/* Actions */}
                                             <td className="px-6 py-4">
                                                 <div className="flex items-center gap-2">
-                                                    <button className="px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-600 rounded-xl text-xs font-bold transition-colors">
-                                                        ✏️ Edit
-                                                    </button>
-                                                    <button className="px-3 py-1.5 bg-red-50 hover:bg-red-100 text-red-500 rounded-xl text-xs font-bold transition-colors">
-                                                        🗑 Delete
-                                                    </button>
+                                                     <EaditMybooking id={item._id} user={user} item={item} />
+
+                                                    <DeletAlert id={item._id} userId={userId} />
                                                 </div>
                                             </td>
                                         </tr>
@@ -162,7 +170,7 @@ const MyTutors = async () => {
                                 <div className="grid grid-cols-2 gap-3 text-sm mb-4">
                                     <div>
                                         <p className="text-xs text-gray-400 mb-0.5">Availability</p>
-                                        <p className="font-medium text-gray-700 text-xs">{item.availability || "—"}</p>
+                                        <p className="font-medium text-gray-700 text-xs">{item.startTime || "—"} to {item.endTime || "—"}</p>
                                     </div>
                                     <div>
                                         <p className="text-xs text-gray-400 mb-0.5">Hourly Fee</p>
@@ -178,23 +186,19 @@ const MyTutors = async () => {
                                         </div>
                                     </div>
                                     <div>
-                                        <p className="text-xs text-gray-400 mb-0.5">Join Date</p>
+                                        <p className="text-xs text-gray-400 mb-0.5">Start Date</p>
                                         <p className="font-medium text-gray-700 text-xs">
-                                            {item.registrationDate
-                                                ? new Date(item.registrationDate).toLocaleDateString('bn-BD')
-                                                : new Date(item.StudentBookingDate).toLocaleDateString('bn-BD')}
+                                            {item.startDate
+                                                ? new Date(item.startDate).toLocaleDateString('en-US')
+                                                : new Date(item.startDate).toLocaleDateString('en-US')}
                                         </p>
                                     </div>
                                 </div>
 
                                 {/* Actions */}
                                 <div className="flex gap-2">
-                                    <button className="flex-1 py-2 bg-blue-50 hover:bg-blue-100 text-blue-600 rounded-xl text-sm font-bold transition-colors">
-                                        ✏️ Edit
-                                    </button>
-                                    <button className="flex-1 py-2 bg-red-50 hover:bg-red-100 text-red-500 rounded-xl text-sm font-bold transition-colors">
-                                        🗑 Delete
-                                    </button>
+                                    <EaditMybooking id={item._id} userId={userId} />
+                                    <DeletAlert id={item._id} userId={userId} />
                                 </div>
                             </div>
                         ))}

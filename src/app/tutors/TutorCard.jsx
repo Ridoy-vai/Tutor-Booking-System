@@ -11,8 +11,8 @@ const CourseCard = ({ tutors }) => {
                 <div className="relative p-3">
                     <div className="relative h-56 w-full overflow-hidden">
                         <img
-                            src={tutor.photoUrl}
-                            alt={tutor.fullName}
+                            src={tutor?.photoUrl || `https://ui-avatars.com/api/?name=${tutor.fullName}&background=7c3aed&color=fff`}
+                            alt={tutor.fullName || "Tutor Avatar"}
                             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                         />
                         <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full flex items-center gap-1.5 shadow-sm">
