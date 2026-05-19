@@ -136,7 +136,7 @@ const MyTutors = async () => {
                                                 <div className="flex items-center gap-2">
                                                      <EaditMybooking id={item._id} user={user} item={item} />
 
-                                                    <DeletAlert id={item._id} userId={userId} />
+                                                    <DeletAlert id={item._id} userId={userId} item={item} />
                                                 </div>
                                             </td>
                                         </tr>

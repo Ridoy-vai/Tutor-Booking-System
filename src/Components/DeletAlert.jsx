@@ -1,20 +1,22 @@
 "use client";
-import {AlertDialog, Button} from "@heroui/react";
+import { AlertDialog, Button } from "@heroui/react";
 
-export function DeletAlert({ id, userId }) {
-    console.log("Received ID in delete modal:", id);
-    console.log("Received User ID in delete modal:", userId);
+export function DeletAlert({ id, userId, item }) {
+  console.log("Received ID in delete modal:", id);
+  console.log("Received User ID in delete modal:", userId);
 
-    // const res = fetch(`http://localhost:1000/tutors/${user}/${id}`, {
-    //     method: "DELETE",
-    //     headers: { "Content-Type": "application/json" },
 
-    // })
-
-    const handleDelete = () => {
-        console.log("Delete confirmed for ID:", id);
-        // Handle delete logic here, e.g., make an API call to delete the item
-    };  
+  const handleDelete = async () => {
+    console.log("Delete confirmed for ID:", id);
+    const res = await fetch(`http://localhost:1000/tutors/${userId}/${id}`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+     
+    });
+    const fetchData = await res.json();
+    console.log("Fetched data for editing:", fetchData);
+    // Handle delete logic here, e.g., make an API call to delete the item
+  };
   return (
     <AlertDialog>
       <Button variant="danger">Delete Project</Button>
