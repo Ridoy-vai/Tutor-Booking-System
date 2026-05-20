@@ -1,36 +1,44 @@
 "use client";
 import { AlertDialog, Button } from "@heroui/react";
+import { useRouter } from "next/navigation"; 
+import { toast } from "react-toastify";
 
 export function DeletAlert({ id, userId, item }) {
-  console.log("Received ID in delete modal:", id);
-  console.log("Received User ID in delete modal:", userId);
-
-
+  const router = useRouter(); 
   const handleDelete = async () => {
-    console.log("Delete confirmed for ID:", id);
-    const res = await fetch(`http://localhost:1000/tutors/${userId}/${id}`, {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-     
-    });
-    const fetchData = await res.json();
-    console.log("Fetched data for editing:", fetchData);
-    // Handle delete logic here, e.g., make an API call to delete the item
+    try {
+      const res = await fetch(`http://localhost:1000/tutors/${userId}/${id}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      if (res.ok) {
+        const fetchData = await res.json();
+        toast.success("Tutor deleted successfully");
+        router.refresh(); 
+      } else {
+        toast.error("Failed to delete tutor.");
+        console.error("Failed to delete");
+      }
+    } catch (error) {
+      console.error("Error during deletion:", error);
+    }
   };
+
   return (
     <AlertDialog>
-      <Button variant="danger">Delete Project</Button>
+      <Button variant="danger">Delete Tutor</Button>
       <AlertDialog.Backdrop>
         <AlertDialog.Container>
-          <AlertDialog.Dialog className="sm:max-w-[400px]">
+          <AlertDialog.Dialog className="sm:max-w-100">
             <AlertDialog.CloseTrigger />
             <AlertDialog.Header>
               <AlertDialog.Icon status="danger" />
-              <AlertDialog.Heading>Delete project permanently?</AlertDialog.Heading>
+              <AlertDialog.Heading>Delete permanently?</AlertDialog.Heading>
             </AlertDialog.Header>
             <AlertDialog.Body>
               <p>
-                This will permanently delete <strong>My Awesome Project</strong> and all of its
+                This will permanently delete <strong>{item?.fullName || "this item"}</strong> and all of its
                 data. This action cannot be undone.
               </p>
             </AlertDialog.Body>
@@ -39,7 +47,7 @@ export function DeletAlert({ id, userId, item }) {
                 Cancel
               </Button>
               <Button slot="close" variant="danger" onClick={handleDelete}>
-                Delete Project
+                Delete
               </Button>
             </AlertDialog.Footer>
           </AlertDialog.Dialog>

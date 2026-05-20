@@ -8,11 +8,8 @@ import {
 
 const TutorProfilePage = async ({ params }) => {
 
-
-    //   console.log('session:', session);
-
-
-    const { id } = await params; // or: const { id } = await params;
+    const { id } = await params;
+    // console.log(id);
     const res = await fetch(`http://localhost:1000/tutors/${id}`, {
         method: "GET",
         headers: {
@@ -20,11 +17,9 @@ const TutorProfilePage = async ({ params }) => {
         },
     });
 
-    if (!res.ok) {
-        return <div>Failed to load tutor</div>;
-    }
-
     const data = await res.json();
+
+    // console.log(data);
     return (
         <div className="min-h-screen bg-slate-50 py-10 px-4 md:px-8">
             <div className="max-w-7xl mx-auto">

@@ -1,76 +1,184 @@
-import React from 'react';
-import { Clock, Heart, Video, BarChart, Star, ArrowRight, BookOpen, GraduationCap, MapPin, } from 'lucide-react';
+"use client";
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { FaSearch, FaMapMarkerAlt, FaBook, FaMoneyBillWave, FaCalendarAlt, FaStar } from 'react-icons/fa';
 
-const CourseCard = ({ tutors }) => {
+const AllTutorsPage = () => {
+    const [tutors, setTutors] = useState([]);
+    const [filteredTutors, setFilteredTutors] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    // ফিল্টার স্টেট
+    const [searchName, setSearchName] = useState('');
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
+
+    // ডেটা ফেচ করা
+    useEffect(() => {
+        const fetchTutors = async () => {
+            try {
+                const res = await fetch('http://localhost:1000/tutors');
+                const data = await res.json();
+                setTutors(data);
+                setFilteredTutors(data);
+                setLoading(false);
+            } catch (error) {
+                console.error("Error fetching tutors:", error);
+                setLoading(false);
+            }
+        };
+        fetchTutors();
+    }, []);
+
+    // ফিল্টারিং লজিক
+    useEffect(() => {
+        let results = tutors;
+
+        // নাম দিয়ে ফিল্টার
+        if (searchName) {
+            results = results.filter(tutor =>
+                tutor.fullName.toLowerCase().includes(searchName.toLowerCase())
+            );
+        }
+
+        // তারিখ দিয়ে ফিল্টার (Start Date and End Date range)
+        if (startDate || endDate) {
+            results = results.filter(tutor => {
+                const tutorDate = new Date(tutor.startDate).getTime();
+                const start = startDate ? new Date(startDate).getTime() : -Infinity;
+                const end = endDate ? new Date(endDate).getTime() : Infinity;
+                
+                return tutorDate >= start && tutorDate <= end;
+            });
+        }
+
+        setFilteredTutors(results);
+    }, [searchName, startDate, endDate, tutors]);
+
     return (
-        tutors.map((tutor) => (
+        <div className="min-h-screen bg-gray-50 py-10 px-4 md:px-10">
+            <div className="max-w-7xl mx-auto">
+                <h2 className="text-3xl font-extrabold text-gray-800 mb-8 text-center md:text-left">
+                    আমাদের টিউটরদের খুঁজুন
+                </h2>
 
-            <div key={tutor._id} className="bg-white  shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 group">
-                {/* Image & Badge */}
-                <div className="relative p-3">
-                    <div className="relative h-56 w-full overflow-hidden">
-                        <img
-                            src={tutor?.photoUrl || `https://ui-avatars.com/api/?name=${tutor.fullName}&background=7c3aed&color=fff`}
-                            alt={tutor.fullName || "Tutor Avatar"}
-                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                        />
-                        <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full flex items-center gap-1.5 shadow-sm">
-                            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                            <span className="text-[10px] font-bold uppercase tracking-wider text-gray-700">{tutor.teachingMode}</span>
+                {/* --- ফিল্টার বার (Responsive) --- */}
+                <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 mb-10">
+                    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 items-end">
+                        
+                        {/* নাম সার্চ */}
+                        <div className="space-y-2">
+                            <label className="text-sm font-bold text-gray-600 ml-1">নাম দিয়ে খুঁজুন</label>
+                            <div className="relative">
+                                <FaSearch className="absolute left-3 top-3.5 text-gray-400" />
+                                <input 
+                                    type="text"
+                                    placeholder="যেমন: আবরার আহমেদ..."
+                                    value={searchName}
+                                    onChange={(e) => setSearchName(e.target.value)}
+                                    className="w-full pl-10 pr-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                                />
+                            </div>
                         </div>
-                        <div className="absolute bottom-3 right-3 bg-purple-600 text-white px-4 py-1.5 rounded-full text-sm font-bold shadow-lg">
-                            ৳{tutor.hourlyFee}/hr
+
+                        {/* স্টার্ট ডেট */}
+                        <div className="space-y-2">
+                            <label className="text-sm font-bold text-gray-600 ml-1">কবে থেকে (Start Date)</label>
+                            <input 
+                                type="date"
+                                value={startDate}
+                                onChange={(e) => setStartDate(e.target.value)}
+                                className="w-full px-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
+                            />
+                        </div>
+
+                        {/* এন্ড ডেট */}
+                        <div className="space-y-2">
+                            <label className="text-sm font-bold text-gray-600 ml-1">কবে পর্যন্ত (End Date)</label>
+                            <input 
+                                type="date"
+                                value={endDate}
+                                onChange={(e) => setEndDate(e.target.value)}
+                                className="w-full px-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
+                            />
+                        </div>
+
+                        {/* রিসেট বাটন */}
+                        <div>
+                            <button 
+                                onClick={() => {setSearchName(''); setStartDate(''); setEndDate('');}}
+                                className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold py-2.5 rounded-xl transition-all"
+                            >
+                                ফিল্টার মুছুন
+                            </button>
                         </div>
                     </div>
                 </div>
 
-                {/* Content */}
-                <div className="px-6 pb-6 pt-2">
-                    <div className="flex justify-between items-start mb-2">
-                        <h3 className="text-xl font-bold text-gray-800">{tutor.fullName}</h3>
-                        <div className="flex items-center gap-1 text-orange-500">
-                            <Star size={16} fill="currentColor" />
-                            <span className="text-sm font-bold">4.9</span>
-                        </div>
+                {/* --- টিউটর লিস্ট গ্রিড --- */}
+                {loading ? (
+                    <div className="text-center py-20 text-xl font-bold text-gray-500">লোড হচ্ছে...</div>
+                ) : filteredTutors.length > 0 ? (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                        {filteredTutors.map((tutor) => (
+                            <TutorCard key={tutor._id} tutor={tutor} />
+                        ))}
                     </div>
-
-                    <div className="flex items-center gap-2 text-purple-600 font-semibold text-sm mb-4">
-                        <BookOpen size={16} />
-                        <span>{tutor.subject} Specialist</span>
+                ) : (
+                    <div className="text-center py-20 bg-white rounded-3xl border-2 border-dashed">
+                        <p className="text-gray-500 text-lg italic">দুঃখিত, এই ফিল্টারে কোনো টিউটর পাওয়া যায়নি!</p>
                     </div>
-
-                    <div className="space-y-2.5 mb-6">
-                        <div className="flex items-center gap-3 text-gray-500 text-sm">
-                            <GraduationCap size={18} className="text-gray-400" />
-                            <span className="truncate">{tutor.institution}</span>
-                        </div>
-                        <div className="flex items-center gap-3 text-gray-500 text-sm">
-                            <MapPin size={18} className="text-gray-400" />
-                            <span>{tutor.location}</span>
-                        </div>
-                        <div className="flex items-center gap-3 text-gray-500 text-sm">
-                            <Clock size={18} className="text-gray-400" />
-                            <span className="truncate">{tutor.availability}</span>
-                        </div>
-                    </div>
-
-                    <div className=" flex border-t border-dashed border-gray-200 pt-5 flex items-center justify-between">
-                        <div className="flex flex-col">
-                            <span className="text-[10px] uppercase font-bold text-gray-400 tracking-widest">Experience</span>
-                            <span className="text-sm font-bold text-gray-700">{tutor.experience}</span>
-                        </div>
-
-                    </div>
-                    <button className="flex items-center w-full gap-1 text-sm font-semibold bg-amber-500 border-amber-500 hover:bg-amber-600 text-white py-2 rounded-md justify-center mt-4 transition-colors duration-300">
-                       <Link href={`/tutors/${tutor._id}`}> View Profile</Link>
-                    </button>
-
-                </div>
+                )}
             </div>
-
-        ))
+        </div>
     );
 };
 
-export default CourseCard;
+// --- ছোট টিউটর কার্ড কম্পোনেন্ট (Responsive) ---
+const TutorCard = ({ tutor }) => {
+    return (
+        <div className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 group">
+            <div className="relative">
+                <img 
+                    src={tutor.photoUrl || 'https://via.placeholder.com/300'} 
+                    alt={tutor.fullName}
+                    className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute top-3 right-3 bg-white/90 backdrop-blur px-2 py-1 rounded-lg flex items-center gap-1 shadow-sm">
+                    <FaStar className="text-amber-500" size={14} />
+                    <span className="text-xs font-bold text-gray-800">4.9</span>
+                </div>
+            </div>
+            
+            <div className="p-5">
+                <h3 className="text-xl font-bold text-gray-800 mb-1 truncate">{tutor.fullName}</h3>
+                <p className="text-blue-600 font-semibold text-sm flex items-center gap-2 mb-3">
+                    <FaBook /> {tutor.subject}
+                </p>
+                
+                <div className="space-y-2 mb-4">
+                    <div className="flex items-center gap-2 text-gray-500 text-xs">
+                        <FaMapMarkerAlt className="text-red-400" /> {tutor.location}
+                    </div>
+                    <div className="flex items-center gap-2 text-gray-500 text-xs">
+                        <FaCalendarAlt className="text-green-500" /> শুরুর তারিখ: {tutor.startDate}
+                    </div>
+                </div>
+
+                <div className="flex items-center justify-between pt-4 border-t border-gray-50">
+                    <div>
+                        <p className="text-[10px] font-bold text-gray-400 uppercase">সম্মানী</p>
+                        <p className="text-lg font-extrabold text-gray-900">৳{tutor.hourlyFee}<span className="text-xs font-normal text-gray-500">/ঘণ্টা</span></p>
+                    </div>
+                    <Link href={`/tutors/${tutor._id || tutor.id}`}>
+                        <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl text-sm font-bold transition-colors">
+                            প্রোফাইল দেখুন
+                        </button>
+                    </Link>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default AllTutorsPage;

@@ -1,18 +1,25 @@
 'use client';
 import { authClient } from "@/lib/auth-client";
+import { i } from "framer-motion/client";
+import { toast } from "react-toastify";
 // import { revalidatePath } from "next/cache";
 
 const BookingForm = ({ data }) => {
     const { data: session } = authClient.useSession();
     const user = session?.user;
+    const userId = user?.id;
 
     const { _id, fullName, email, subject, location, institution, experience, availability, teachingMode, hourlyFee, totalSlots, startDate, photoUrl } = data;
-
     const handelBooking = async (e) => {
         e.preventDefault();
 
         if (totalSlots <= 0) {
-            alert("কোনো slot নেই!");
+            toast.error("not available slot!");
+            return;
+        }
+
+        if (!user) {
+            toast.error("You must be logged in to book a session.");
             return;
         }
 
@@ -20,7 +27,7 @@ const BookingForm = ({ data }) => {
         const bookingDetails = Object.fromEntries(formData.entries());
 
         const bookingData = {
-            userId: user?.id,
+            userId: userId || "Unknown User",
             StudentName: user?.name,
             StudentEmail: user?.email,
             studentPhone: bookingDetails.mobile,
@@ -42,6 +49,16 @@ const BookingForm = ({ data }) => {
         };
 
         try {
+            // const isbooked = await fetch(`http://localhost:1000/bookings/${_id}`);
+            // const checkData = await isbooked.json();
+            // checkData.filter((booking) => {
+            //     if (booking.tutorId === tutorId) {
+            //         toast.info("You have already booked a session with this tutor.");
+            //         return;
+            //     }
+            // });
+            // console.log("Check booking response:", checkData);
+
             const res = await fetch(`http://localhost:1000/bookings`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -54,10 +71,11 @@ const BookingForm = ({ data }) => {
                 : await res.text();
 
             if (!res.ok) {
-                console.error("Booking error:", resData);
-                alert("Booking failed: " + (resData?.message || resData || "অজানা error"));
+                // console.error("Booking error:", resData);
+                toast.error("Booking failed: " + (resData?.message || resData || "unknown error"));
                 return;
             }
+
 
             const update = await fetch(`http://localhost:1000/tutors/${_id}`, {
                 method: "PATCH",
@@ -65,24 +83,22 @@ const BookingForm = ({ data }) => {
                 body: JSON.stringify({ totalSlots: totalSlots - 1 })
             });
 
-            const updateContentType = update.headers.get("content-type");
-            const updateResult = updateContentType?.includes("application/json")
-                ? await update.json()
-                : await update.text();
+            // const updateContentType = update.headers.get("content-type");
+
 
             if (!update.ok) {
-                console.error("Tutor update error:", updateResult);
-                alert("Booking হয়েছে, কিন্তু slot update এ সমস্যা হয়েছে।");
+                // console.error("Tutor update error:", updateResult);
+                toast.error("Booking successful, but there was an issue updating the slot availability.");
                 return;
             }
 
-            alert("Booking request সফলভাবে পাঠানো হয়েছে!");
-            window.location.href = `/tutors/${_id}`; // Booking সফল হলে সেই Tutor এর পেজে রিডাইরেক্ট
-
+            toast.success("Booking request submitted successfully!");
+            // window.location.href = `/bookedSessions`; 
         } catch (err) {
-            console.error("Network/Parse error:", err);
-            alert("Server এর সাথে যোগাযোগ করা যাচ্ছে না। Server চালু আছে কিনা দেখুন।");
+            // console.error("Network/Parse error:", err);
+            toast.error("Failed to connect to the server. Please check if the server is running.");
         }
+
     };
 
     return (
@@ -135,11 +151,10 @@ const BookingForm = ({ data }) => {
                     <button
                         type="submit"
                         disabled={data.totalSlots <= 0}
-                        className={`w-full font-bold py-4 rounded-xl transition-all transform active:scale-95 ${
-                            data.totalSlots <= 0
+                        className={`w-full font-bold py-4 rounded-xl transition-all transform active:scale-95 ${data.totalSlots <= 0
                                 ? 'bg-gray-400 cursor-not-allowed text-white'
                                 : 'bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-200'
-                        }`}
+                            }`}
                     >
                         {data.totalSlots <= 0 ? 'No Available Slots' : 'Confirm Booking Request'}
                     </button>

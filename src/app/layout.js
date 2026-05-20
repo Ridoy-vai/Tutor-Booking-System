@@ -1,4 +1,6 @@
 // import { Geist, Geist_Mono } from "next/font/google";
+
+import { ToastContainer } from "react-toastify";
 import "./globals.css";
 import HeroNavbar from "@/Components/HeroNavbar";
 
@@ -18,6 +20,7 @@ export default function RootLayout({ children }) {
       <body className="min-h-full flex flex-col">
         <HeroNavbar />
         {children}
+        <ToastContainer />
       </body>
     </html>
   );
