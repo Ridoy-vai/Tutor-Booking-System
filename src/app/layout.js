@@ -3,6 +3,7 @@
 import { ToastContainer } from "react-toastify";
 import "./globals.css";
 import HeroNavbar from "@/Components/HeroNavbar";
+import Footer from "@/Components/Footer";
 
 
 
@@ -20,6 +21,7 @@ export default function RootLayout({ children }) {
       <body className="min-h-full flex flex-col">
         <HeroNavbar />
         {children}
+        <Footer/>
         <ToastContainer />
       </body>
     </html>

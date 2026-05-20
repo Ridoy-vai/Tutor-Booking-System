@@ -43,17 +43,20 @@ export default function HeroNavbar() {
   };
 
   return (
-    <nav className="w-full border-b bg-white/90 backdrop-blur-md shadow-sm sticky top-0 z-50">
+    <nav className="max-w-7xl mx-auto w-full border-b bg-white/90 backdrop-blur-md shadow-sm sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        {/* Navbar Content */}
+
+        {/* Navbar */}
         <div className="flex items-center justify-between h-16">
 
-          <img
-            src="https://cdn.10minuteschool.com/images/svg/10mslogo-svg.svg"
-            alt="Logo"
-            className="h-20 w-20"
-          />
+          {/* Logo */}
+          <Link href="/" className="flex items-center">
+            <img
+              src="https://cdn.10minuteschool.com/images/svg/10mslogo-svg.svg"
+              alt="Logo"
+              className="h-20 w-20 object-contain"
+            />
+          </Link>
 
           {/* Desktop Menu */}
           <div className="hidden lg:flex items-center gap-2">
@@ -77,9 +80,9 @@ export default function HeroNavbar() {
           </div>
 
           {/* Right Side */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
 
-            {/* Auth Buttons */}
+            {/* Desktop Auth Buttons */}
             {!logedin ? (
               <div className="hidden sm:flex items-center gap-2">
                 <Link
@@ -102,10 +105,12 @@ export default function HeroNavbar() {
                   <Avatar
                     src={
                       user?.image ||
-                      `https://ui-avatars.com/api/?name=${user?.name || "User"}&background=7c3aed&color=fff&size=512`
+                      `https://ui-avatars.com/api/?name=${
+                        user?.name || "User"
+                      }&background=7c3aed&color=fff&size=512`
                     }
                     alt={user?.name || "User"}
-                    className="cursor-pointer ring-2 ring-gray-200"
+                    className="cursor-pointer ring-2 ring-gray-200 w-9 h-9 sm:w-10 sm:h-10"
                   />
                 </DropdownTrigger>
 
@@ -155,9 +160,9 @@ export default function HeroNavbar() {
             {/* Mobile Menu Button */}
             <button
               onClick={() => setOpen(!open)}
-              className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition"
+              className="lg:hidden p-2 rounded-xl hover:bg-gray-100 transition"
             >
-              {open ? <X size={24} /> : <Menu size={24} />}
+              {open ? <X size={22} /> : <Menu size={22} />}
             </button>
           </div>
         </div>
@@ -165,11 +170,12 @@ export default function HeroNavbar() {
         {/* Mobile Menu */}
         <div
           className={`lg:hidden overflow-hidden transition-all duration-300 ${
-            open ? "max-h-[500px] pb-5" : "max-h-0"
+            open ? "max-h-[600px] py-4" : "max-h-0"
           }`}
         >
-          <div className="flex flex-col gap-2 pt-3 border-t">
+          <div className="flex flex-col gap-2 border-t pt-4">
 
+            {/* Mobile Nav Links */}
             {navLinks.map((link) => {
               const active = pathname === link.href;
 
@@ -178,7 +184,7 @@ export default function HeroNavbar() {
                   key={link.href}
                   href={link.href}
                   onClick={() => setOpen(false)}
-                  className={`px-4 py-3 rounded-xl text-sm font-medium transition ${
+                  className={`w-fit min-w-[180px] px-4 py-3 rounded-xl text-sm font-medium transition ${
                     active
                       ? "bg-black text-white"
                       : "text-gray-700 hover:bg-gray-100"
@@ -189,13 +195,14 @@ export default function HeroNavbar() {
               );
             })}
 
-            {/* Mobile Auth */}
+            {/* Mobile Auth Buttons */}
             {!logedin && (
-              <div className="flex flex-col gap-2 mt-2">
+              <div className="flex flex-col gap-2 mt-3">
+
                 <Link
                   href="/authentication/login"
                   onClick={() => setOpen(false)}
-                  className="px-4 py-3 rounded-xl border text-center text-sm font-medium hover:bg-gray-50"
+                  className="w-fit min-w-[180px] px-4 py-3 rounded-xl border text-center text-sm font-medium hover:bg-gray-50"
                 >
                   Login
                 </Link>
@@ -203,7 +210,7 @@ export default function HeroNavbar() {
                 <Link
                   href="/authentication/signup"
                   onClick={() => setOpen(false)}
-                  className="px-4 py-3 rounded-xl bg-black text-white text-center text-sm font-medium"
+                  className="w-fit min-w-[180px] px-4 py-3 rounded-xl bg-black text-white text-center text-sm font-medium"
                 >
                   Signup
                 </Link>
