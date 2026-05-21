@@ -163,14 +163,14 @@ export default function HeroNavbar() {
               ) : (
                 <Dropdown placement="bottom-end">
                   <DropdownTrigger>
-                    <Avatar
+                    <img
                       src={
                         user?.image ||
                         `https://ui-avatars.com/api/?name=${
                           user?.name || "User"
                         }`
                       }
-                      className="cursor-pointer ring-2 ring-gray-200 w-10 h-10"
+                      className="cursor-pointer ring-2 ring-gray-200 w-12 h-12 rounded-full"
                     />
                   </DropdownTrigger>
 
@@ -273,14 +273,14 @@ export default function HeroNavbar() {
 
             <div className="flex items-center gap-3">
 
-              <Avatar
+              <img
                 src={
                   user?.image ||
                   `https://ui-avatars.com/api/?name=${
                     user?.name || "User"
                   }`
                 }
-                className="w-12 h-12"
+                className="w-20 h-20"
               />
 
               <div>

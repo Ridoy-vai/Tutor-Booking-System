@@ -235,10 +235,10 @@ const TutorCard = ({ tutor }) => {
       <div className="relative overflow-hidden h-56">
         <img
           src={
-            tutor.photoUrl ||
+            tutor.TutorBaner ||
             "https://i.ibb.co/4pDNDk1/avatar.png"
           }
-          alt={tutor.fullName}
+          alt={tutor.TecherName}
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
         />
 
@@ -251,23 +251,23 @@ const TutorCard = ({ tutor }) => {
       {/* Content */}
       <div className="p-5 flex-grow flex flex-col">
         <h2 className="text-xl font-bold text-gray-900 mb-1">
-          {tutor.fullName}
+          {tutor.TecherName}
         </h2>
 
         <p className="text-blue-600 font-semibold text-sm flex items-center gap-2 mb-4">
           <FaBook />
-          {tutor.subject}
+          {tutor.TutorSubject}
         </p>
 
         <div className="space-y-3 text-sm text-gray-500 mb-5">
           <div className="flex items-center gap-2">
             <FaMapMarkerAlt className="text-red-400" />
-            <span>{tutor.location}</span>
+            <span>{tutor.TutorLocation}</span>
           </div>
 
           <div className="flex items-center gap-2">
             <FaCalendarAlt className="text-green-500" />
-            <span>{tutor.startDate}</span>
+            <span>{tutor.tutorstartDate}</span>
           </div>
         </div>
 
@@ -279,7 +279,7 @@ const TutorCard = ({ tutor }) => {
             </p>
 
             <h3 className="text-2xl font-black text-gray-900">
-              ৳{tutor.hourlyFee}
+              ${tutor.tutorhourlyFee}
             </h3>
           </div>
 

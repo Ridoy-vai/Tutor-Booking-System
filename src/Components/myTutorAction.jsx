@@ -13,7 +13,7 @@ export function EaditMybooking({ id, user, item }) {
 
     const userId = user?.id;
 
-    const { email, endTime, experience, fullName, hourlyFee, institution, location, photoUrl, startDate, startTime, subject, teachingMode, totalSlots, } = item || {};
+    const { TecherEmail, tutorendTime, TutorerExprence, TecherName, tutorhourlyFee, tutorinstitution, TutorLocation, TutorBaner, tutorstartDate, tutorstartTime, TutorSubject, tutorteachingMode, totalSlots, } = item || {};
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -89,38 +89,38 @@ export function EaditMybooking({ id, user, item }) {
                                         {/* Tutor Info Section */}
                                         <div className="space-y-4">
                                             <h3 className="text-xs font-bold uppercase text-gray-400 border-b pb-2">Tutor Info</h3>
-                                            <input defaultValue={photoUrl} name="photoUrl" placeholder="Photo URL" className="w-full text-sm px-3 py-2 border rounded-lg outline-none focus:border-purple-400" />
+                                            <input defaultValue={TutorBaner} name="TutorBaner" placeholder="Photo URL" className="w-full text-sm px-3 py-2 border rounded-lg outline-none focus:border-purple-400" />
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                                <input defaultValue={fullName} name="fullName" placeholder="Full Name" className="w-full text-sm px-3 py-2 border rounded-lg outline-none focus:border-purple-400" required />
-                                                <input defaultValue={email} name="email" placeholder="Email" className="w-full text-sm px-3 py-2 border rounded-lg outline-none focus:border-purple-400" required />
+                                                <input defaultValue={TecherName} name="TecherName" placeholder="Full Name" className="w-full text-sm px-3 py-2 border rounded-lg outline-none focus:border-purple-400" required />
+                                                <input defaultValue={TecherEmail} name="TecherEmail" placeholder="Email" className="w-full text-sm px-3 py-2 border rounded-lg outline-none focus:border-purple-400" required />
                                             </div>
-                                            <input defaultValue={subject} name="subject" placeholder="Subject" className="w-full text-sm px-3 py-2 border rounded-lg outline-none focus:border-purple-400" />
-                                            <input defaultValue={location} name="location" placeholder="Location" className="w-full text-sm px-3 py-2 border rounded-lg outline-none focus:border-purple-400" />
-                                            <input defaultValue={experience} name="experience" placeholder="Experience" className="w-full text-sm px-3 py-2 border rounded-lg outline-none focus:border-purple-400" />
+                                            <input defaultValue={TutorSubject} name="subject" placeholder="TutorSubject" className="w-full text-sm px-3 py-2 border rounded-lg outline-none focus:border-purple-400" />
+                                            <input defaultValue={TutorLocation} name="TutorLocation" placeholder="Location" className="w-full text-sm px-3 py-2 border rounded-lg outline-none focus:border-purple-400" />
+                                            <input defaultValue={TutorerExprence} name="TutorerExprence" placeholder="Experience" className="w-full text-sm px-3 py-2 border rounded-lg outline-none focus:border-purple-400" />
                                         </div>
 
                                         {/* Schedule Section */}
                                         <div className="space-y-4">
                                             <h3 className="text-xs font-bold uppercase text-gray-400 border-b pb-2">Schedule & Pricing</h3>
                                             <div className="grid grid-cols-2 gap-3">
-                                                <input name="startTime" defaultValue={startTime?.slice(0, 5)} type="time" className="w-full text-sm px-3 py-2 border rounded-lg outline-none" />
-                                                <input name="endTime" defaultValue={endTime?.slice(0, 5)} type="time" className="w-full text-sm px-3 py-2 border rounded-lg outline-none" />
+                                                <input name="tutorstartTime" defaultValue={tutorstartTime?.slice(0, 5)} type="time" className="w-full text-sm px-3 py-2 border rounded-lg outline-none" />
+                                                <input name="tutorendTime" defaultValue={tutorendTime?.slice(0, 5)} type="time" className="w-full text-sm px-3 py-2 border rounded-lg outline-none" />
                                             </div>
                                             <div className="grid grid-cols-3 gap-3">
-                                                <input name="hourlyFee" defaultValue={hourlyFee} type="number" placeholder="Fee" className="w-full text-sm px-3 py-2 border rounded-lg outline-none" />
+                                                <input name="tutorhourlyFee" defaultValue={tutorhourlyFee} type="number" placeholder="Fee" className="w-full text-sm px-3 py-2 border rounded-lg outline-none" />
                                                 <input name="totalSlots" defaultValue={totalSlots} type="number" placeholder="Slots" className="w-full text-sm px-3 py-2 border rounded-lg outline-none" />
-                                                <input name="startDate" defaultValue={startDate} type="date" className="w-full text-sm px-3 py-2 border rounded-lg outline-none" />
+                                                <input name="tutorstartDate" defaultValue={tutorstartDate} type="date" className="w-full text-sm px-3 py-2 border rounded-lg outline-none" />
                                             </div>
                                         </div>
 
                                         {/* Mode Section */}
                                         <div className="space-y-4">
                                             <h3 className="text-xs font-bold uppercase text-gray-400 border-b pb-2">Institution & Mode</h3>
-                                            <input defaultValue={institution} name="institution" placeholder="Institution" className="w-full text-sm px-3 py-2 border rounded-lg outline-none" />
+                                            <input defaultValue={tutorinstitution} name="tutorinstitution" placeholder="Institution" className="w-full text-sm px-3 py-2 border rounded-lg outline-none" />
                                             <div className="flex gap-2">
                                                 {["Online", "Offline", "Both"].map((mode) => (
                                                     <label key={mode} className="flex-1 cursor-pointer">
-                                                        <input type="radio" name="teachingMode" value={mode} defaultChecked={teachingMode === mode} className="hidden peer" />
+                                                        <input type="radio" name="tutorteachingMode" value={mode} defaultChecked={tutorteachingMode === mode} className="hidden peer" />
                                                         <div className="py-2 text-center border rounded-lg text-xs transition-all peer-checked:bg-purple-500 peer-checked:text-white">
                                                             {mode}
                                                         </div>

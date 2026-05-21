@@ -15,9 +15,23 @@ const BookingForm = ({ data }) => {
     const router = useRouter();
 
     const {
-        _id, fullName, email, subject, location, institution,
-        experience, availability, teachingMode, hourlyFee,
-        totalSlots, startDate, photoUrl
+        _id,
+        userName,
+        userEmail,
+        userPhoto,
+        TutorBaner,
+        TecherName,
+        TecherEmail,
+        TutorSubject,
+        TutorLocation,
+        TutorerExprence,
+        tutorstartTime,
+        tutorendTime,
+        tutorhourlyFee,
+        tutortotalSlots,
+        tutorstartDate,
+        tutorinstitution,
+        tutorteachingMode
     } = data;
 
     const validate = (formData) => {
@@ -56,9 +70,9 @@ const BookingForm = ({ data }) => {
             return;
         }
 
-        setErrors({}); 
+        setErrors({});
 
-        if (totalSlots <= 0) {
+        if (tutortotalSlots <= 0) {
             toast.error("No available slots!");
             return;
         }
@@ -76,25 +90,29 @@ const BookingForm = ({ data }) => {
 
             const bookingData = {
                 userId: userId || "Unknown User",
-                StudentName: user?.name || "Anonymous",
-                StudentEmail: user?.email,
+                StudentName: bookingDetails?.name || "Anonymous",
                 studentPhone: bookingDetails.mobile,
                 StudentMessage: bookingDetails.message,
                 StudentBookingDate: bookingDetails.date,
-                tutorId: _id,
-                TutorName: fullName,
-                email,
-                subject,
-                location,
-                institution,
-                experience,
-                availability,
-                teachingMode,
-                hourlyFee,
-                totalSlots,
-                startDate,
-                photoUrl
+                bookingstatus: "pending",
+                userName,
+                userEmail,
+                userPhoto,
+                TutorBaner,
+                TecherName,
+                TecherEmail,
+                TutorSubject,
+                TutorLocation,
+                TutorerExprence,
+                tutorstartTime,
+                tutorendTime,
+                tutorhourlyFee,
+                tutortotalSlots,
+                tutorstartDate,
+                tutorinstitution,
+                tutorteachingMode
             };
+            console.log("Booking data to be sent:", bookingData);
 
             const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URI}/bookings`, {
                 method: "POST",
@@ -117,7 +135,7 @@ const BookingForm = ({ data }) => {
                     "Content-Type": "application/json",
                     authorization: `Bearer ${tokenData?.token}`
                 },
-                body: JSON.stringify({ totalSlots: totalSlots - 1 })
+                body: JSON.stringify({ totalSlots: tutortotalSlots - 1 })
             });
 
             if (!update.ok) {
@@ -139,7 +157,7 @@ const BookingForm = ({ data }) => {
         <div className="lg:col-span-4">
             <div className="bg-white rounded-3xl p-6 shadow-xl border border-gray-100 sticky top-10">
                 <h3 className="text-2xl font-bold text-gray-800 mb-6">
-                    Book a Session
+                    Student Information
                 </h3>
 
                 <form onSubmit={handelBooking} className="space-y-4">
@@ -147,7 +165,7 @@ const BookingForm = ({ data }) => {
                     {/* NAME */}
                     <div>
                         <label className="block text-sm font-semibold text-gray-700 mb-2">
-                            Full Name
+                            Student Full Name
                         </label>
                         <input
                             name="name"
@@ -163,7 +181,7 @@ const BookingForm = ({ data }) => {
                     {/* MOBILE */}
                     <div>
                         <label className="block text-sm font-semibold text-gray-700 mb-2">
-                            Mobile
+                            Student Mobile
                         </label>
                         <input
                             name="mobile"
@@ -181,7 +199,7 @@ const BookingForm = ({ data }) => {
                     {/* DATE */}
                     <div>
                         <label className="block text-sm font-semibold text-gray-700 mb-2">
-                            Joining Date
+                            Student Joining Date
                         </label>
                         <input
                             name="date"
@@ -207,18 +225,17 @@ const BookingForm = ({ data }) => {
                     {/* BUTTON */}
                     <button
                         type="submit"
-                        disabled={totalSlots <= 0 || isPending}
-                        className={`w-full font-bold py-4 rounded-xl ${
-                            totalSlots <= 0 || isPending
-                                ? "bg-gray-400 cursor-not-allowed text-white"
-                                : "bg-blue-600 hover:bg-blue-700 text-white"
-                        }`}
+                        disabled={tutortotalSlots <= 0 || isPending}
+                        className={`w-full font-bold py-4 rounded-xl ${tutortotalSlots <= 0 || isPending
+                            ? "bg-gray-400 cursor-not-allowed text-white"
+                            : "bg-blue-600 hover:bg-blue-700 text-white"
+                            }`}
                     >
                         {isPending
                             ? "Processing..."
-                            : totalSlots <= 0
-                            ? "No Available Slots"
-                            : "Confirm Booking Request"}
+                            : tutortotalSlots <= 0
+                                ? "No Available Slots"
+                                : "Confirm Booking Request"}
                     </button>
                 </form>
             </div>

@@ -7,7 +7,7 @@ export function CancleBooking({ id, userId, item }) {
     
     const router = useRouter();
     const handelcancle = async () => {
-        if(item.status === "Cancelled"){
+        if(item.bookingstatus === "Cancelled"){
             toast.info("This booking is already cancelled.");
             return;
         }
@@ -15,7 +15,7 @@ export function CancleBooking({ id, userId, item }) {
             tutorId: item.tutorId,
             userId: userId,
             StudentName: item.StudentName,
-            StudentEmail: item.StudentEmail,
+            // StudentEmail: item.StudentEmail,
             studentPhone: item.studentPhone,
             StudentMessage: item.StudentMessage,
             TutorName: item.TutorName,
@@ -30,8 +30,10 @@ export function CancleBooking({ id, userId, item }) {
             StudentBookingDate: item.StudentBookingDate,
             startDate: item.startDate,
             totalSlots: item.totalSlots,
-            status: "Cancelled",
+            bookingstatus: "Cancelled",
         };
+
+        
 
         try {
             console.log("Cancelling booking with data:", UpdatebookingData);
@@ -79,7 +81,7 @@ export function CancleBooking({ id, userId, item }) {
                                 Go Back
                             </Button>
                             <Button slot="close" variant="danger" onClick={handelcancle}>
-                                Confirm Cancel Booking
+                                Confirm Cancel ooking
                             </Button>
                         </AlertDialog.Footer>
                     </AlertDialog.Dialog>

@@ -39,20 +39,20 @@ const TutorList = ({ tutors }) => {
                 >
                     <div className="relative h-64 overflow-hidden">
                         <img
-                            src={tutor?.photoUrl || `https://ui-avatars.com/api/?name=${tutor.fullName}&background=7c3aed&color=fff&size=512`}
-                            alt={tutor.fullName}
+                            src={tutor?.TutorBaner || `https://ui-avatars.com/api/?name=${tutor.TecherName}&background=7c3aed&color=fff&size=512`}
+                            alt={tutor.TecherName}
                             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                         />
                         
                         <div className="absolute top-4 left-4">
                             <span className="flex items-center gap-1.5 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-xl text-[10px] font-bold text-gray-800 shadow-sm uppercase tracking-wider">
                                 <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-                                {tutor.teachingMode}
+                                {tutor.tutorteachingMode}
                             </span>
                         </div>
                         
                         <div className="absolute bottom-4 right-4 bg-purple-600 text-white px-4 py-2 rounded-xl font-bold text-sm shadow-lg border border-white/20">
-                            ৳{tutor.hourlyFee}/hr
+                            ${tutor.tutorhourlyFee}/hr
                         </div>
                     </div>
 
@@ -60,11 +60,11 @@ const TutorList = ({ tutors }) => {
                         <div className="flex justify-between items-start mb-6">
                             <div>
                                 <h3 className="text-xl font-extrabold text-gray-900 mb-1 group-hover:text-purple-600 transition-colors">
-                                    {tutor.fullName}
+                                    {tutor.TecherName}
                                 </h3>
                                 <p className="text-purple-600 font-bold text-xs flex items-center gap-1.5 uppercase tracking-wide">
                                     <BookOpen size={14} />
-                                    {tutor.subject} Specialist
+                                    {tutor.TutorSubject} Specialist
                                 </p>
                             </div>
                             <div className="flex items-center gap-1 bg-amber-50 text-amber-600 px-2 py-1 rounded-lg border border-amber-100">
@@ -80,7 +80,7 @@ const TutorList = ({ tutors }) => {
                                 </div>
                                 <div className="overflow-hidden">
                                     <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Institution</p>
-                                    <p className="text-sm font-bold text-gray-700 truncate">{tutor.institution}</p>
+                                    <p className="text-sm font-bold text-gray-700 truncate">{tutor.tutorinstitution}</p>
                                 </div>
                             </div>
 
@@ -90,7 +90,7 @@ const TutorList = ({ tutors }) => {
                                 </div>
                                 <div>
                                     <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Location</p>
-                                    <p className="text-sm font-bold text-gray-700">{tutor.location}</p>
+                                    <p className="text-sm font-bold text-gray-700">{tutor.TutorLocation}</p>
                                 </div>
                             </div>
 
@@ -100,7 +100,7 @@ const TutorList = ({ tutors }) => {
                                 </div>
                                 <div>
                                     <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Availability</p>
-                                    <p className="text-sm font-bold text-gray-700">{tutor.startDate}</p>
+                                    <p className="text-sm font-bold text-gray-700">{tutor.tutorstartDate}</p>
                                 </div>
                             </div>
                         </div>
@@ -109,7 +109,7 @@ const TutorList = ({ tutors }) => {
                     <div className="px-7 py-6 border-t border-gray-50 flex items-center justify-between bg-gray-50/30">
                         <div>
                             <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Experience</p>
-                            <p className="text-sm font-black text-gray-800">{tutor.experience}</p>
+                            <p className="text-sm font-black text-gray-800">{tutor.TutorerExprence}</p>
                         </div>
 
                         <Link
