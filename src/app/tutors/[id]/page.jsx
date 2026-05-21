@@ -1,5 +1,6 @@
 import BookingForm from '@/Components/BookingForm';
-import { readResponseBody } from '@/lib/http';
+import { getResponseMessage, readResponseBody } from '@/lib/http';
+import { notFound } from 'next/navigation';
 import React from 'react';
 import {
     FaUser, FaEnvelope, FaBook, FaMapMarkerAlt,
@@ -19,7 +20,19 @@ const TutorProfilePage = async ({ params }) => {
     });
 
     const responseBody = await readResponseBody(res);
-    const data = responseBody && typeof responseBody === "object" ? responseBody : null;
+    if (res.status === 404) {
+        notFound();
+    }
+
+    if (!res.ok) {
+        throw new Error(getResponseMessage(responseBody, "Failed to load tutor details."));
+    }
+
+    if (!responseBody || typeof responseBody !== "object") {
+        throw new Error("Tutor details API did not return JSON data.");
+    }
+
+    const data = responseBody;
 
     // console.log(data);
     return (
