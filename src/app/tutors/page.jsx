@@ -1,6 +1,4 @@
 "use client";
-
-// import { readResponseBody } from "@/lib/http";
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import {

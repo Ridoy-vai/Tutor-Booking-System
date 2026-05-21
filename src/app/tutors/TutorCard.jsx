@@ -1,5 +1,4 @@
 "use client";
-// import { readResponseBody } from "@/lib/http";
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { FaSearch, FaMapMarkerAlt, FaBook, FaMoneyBillWave, FaCalendarAlt, FaStar } from 'react-icons/fa';
@@ -8,13 +7,10 @@ const AllTutorsPage = () => {
     const [tutors, setTutors] = useState([]);
     const [filteredTutors, setFilteredTutors] = useState([]);
     const [loading, setLoading] = useState(true);
-
-    // ফিল্টার স্টেট
     const [searchName, setSearchName] = useState('');
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
 
-    // ডেটা ফেচ করা
     useEffect(() => {
         const fetchTutors = async () => {
             try {
@@ -34,18 +30,15 @@ const AllTutorsPage = () => {
         fetchTutors();
     }, []);
 
-    // ফিল্টারিং লজিক
     useEffect(() => {
         let results = tutors;
 
-        // নাম দিয়ে ফিল্টার
         if (searchName) {
             results = results.filter(tutor =>
                 tutor.fullName.toLowerCase().includes(searchName.toLowerCase())
             );
         }
 
-        // তারিখ দিয়ে ফিল্টার (Start Date and End Date range)
         if (startDate || endDate) {
             results = results.filter(tutor => {
                 const tutorDate = new Date(tutor.startDate).getTime();
@@ -63,21 +56,18 @@ const AllTutorsPage = () => {
         <div className="min-h-screen bg-gray-50 py-10 px-4 md:px-10">
             <div className="max-w-7xl mx-auto">
                 <h2 className="text-3xl font-extrabold text-gray-800 mb-8 text-center md:text-left">
-                    আমাদের টিউটরদের খুঁজুন
+                    Find Our Tutors
                 </h2>
 
-                {/* --- ফিল্টার বার (Responsive) --- */}
                 <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 mb-10">
                     <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 items-end">
-                        
-                        {/* নাম সার্চ */}
                         <div className="space-y-2">
-                            <label className="text-sm font-bold text-gray-600 ml-1">নাম দিয়ে খুঁজুন</label>
+                            <label className="text-sm font-bold text-gray-600 ml-1">Search by Name</label>
                             <div className="relative">
                                 <FaSearch className="absolute left-3 top-3.5 text-gray-400" />
                                 <input 
                                     type="text"
-                                    placeholder="যেমন: আবরার আহমেদ..."
+                                    placeholder="e.g., Abu Raihan..."
                                     value={searchName}
                                     onChange={(e) => setSearchName(e.target.value)}
                                     className="w-full pl-10 pr-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all"
@@ -85,9 +75,9 @@ const AllTutorsPage = () => {
                             </div>
                         </div>
 
-                        {/* স্টার্ট ডেট */}
+                        {/* Start Date */}
                         <div className="space-y-2">
-                            <label className="text-sm font-bold text-gray-600 ml-1">কবে থেকে (Start Date)</label>
+                            <label className="text-sm font-bold text-gray-600 ml-1">From (Start Date)</label>
                             <input 
                                 type="date"
                                 value={startDate}
@@ -96,9 +86,9 @@ const AllTutorsPage = () => {
                             />
                         </div>
 
-                        {/* এন্ড ডেট */}
+                        {/* End Date */}
                         <div className="space-y-2">
-                            <label className="text-sm font-bold text-gray-600 ml-1">কবে পর্যন্ত (End Date)</label>
+                            <label className="text-sm font-bold text-gray-600 ml-1">To (End Date)</label>
                             <input 
                                 type="date"
                                 value={endDate}
@@ -107,21 +97,19 @@ const AllTutorsPage = () => {
                             />
                         </div>
 
-                        {/* রিসেট বাটন */}
                         <div>
                             <button 
                                 onClick={() => {setSearchName(''); setStartDate(''); setEndDate('');}}
                                 className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold py-2.5 rounded-xl transition-all"
                             >
-                                ফিল্টার মুছুন
+                                Reset Filters
                             </button>
                         </div>
                     </div>
                 </div>
 
-                {/* --- টিউটর লিস্ট গ্রিড --- */}
                 {loading ? (
-                    <div className="text-center py-20 text-xl font-bold text-gray-500">লোড হচ্ছে...</div>
+                    <div className="text-center py-20 text-xl font-bold text-gray-500">Loading...</div>
                 ) : filteredTutors.length > 0 ? (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                         {filteredTutors.map((tutor) => (
@@ -130,7 +118,7 @@ const AllTutorsPage = () => {
                     </div>
                 ) : (
                     <div className="text-center py-20 bg-white rounded-3xl border-2 border-dashed">
-                        <p className="text-gray-500 text-lg italic">দুঃখিত, এই ফিল্টারে কোনো টিউটর পাওয়া যায়নি!</p>
+                        <p className="text-gray-500 text-lg italic">Sorry, no tutors found with the selected filters!</p>
                     </div>
                 )}
             </div>
@@ -138,7 +126,7 @@ const AllTutorsPage = () => {
     );
 };
 
-// --- ছোট টিউটর কার্ড কম্পোনেন্ট (Responsive) ---
+
 const TutorCard = ({ tutor }) => {
     return (
         <div className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 group">
@@ -165,18 +153,18 @@ const TutorCard = ({ tutor }) => {
                         <FaMapMarkerAlt className="text-red-400" /> {tutor.location}
                     </div>
                     <div className="flex items-center gap-2 text-gray-500 text-xs">
-                        <FaCalendarAlt className="text-green-500" /> শুরুর তারিখ: {tutor.startDate}
+                        <FaCalendarAlt className="text-green-500" /> Start Date: {tutor.startDate}
                     </div>
                 </div>
 
                 <div className="flex items-center justify-between pt-4 border-t border-gray-50">
                     <div>
-                        <p className="text-[10px] font-bold text-gray-400 uppercase">সম্মানী</p>
-                        <p className="text-lg font-extrabold text-gray-900">৳{tutor.hourlyFee}<span className="text-xs font-normal text-gray-500">/ঘণ্টা</span></p>
+                        <p className="text-[10px] font-bold text-gray-400 uppercase">Hourly Rate</p>
+                        <p className="text-lg font-extrabold text-gray-900">${tutor.hourlyFee}<span className="text-xs font-normal text-gray-500">/hour</span></p>
                     </div>
                     <Link href={`/tutors/${tutor._id || tutor.id}`}>
                         <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl text-sm font-bold transition-colors">
-                            প্রোফাইল দেখুন
+                            View Profile
                         </button>
                     </Link>
                 </div>

@@ -3,7 +3,6 @@ import { MongoClient } from "mongodb";
 import { mongodbAdapter } from "better-auth/adapters/mongodb";
 import { jwt } from "better-auth/plugins";
 
-// Singleton pattern — hot reload-এ নতুন connection হবে না
 const getClient = () => {
   if (process.env.NODE_ENV === "development") {
     if (!global._mongoClient) {

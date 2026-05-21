@@ -48,10 +48,6 @@ const Banner = () => {
 
   return (
     <div className="w-full relative overflow-hidden bg-black">
-      {/* 
-          Height fix: h-[80vh] used for a perfect balance. 
-          You can use h-[calc(100vh-80px)] if your navbar is 80px high 
-      */}
       <div className="relative h-[65vh] sm:h-[75vh] md:h-[85vh] w-full group">
         
         <AnimatePresence mode="wait">
@@ -71,7 +67,7 @@ const Banner = () => {
               className="absolute inset-0 bg-cover bg-center"
               style={{ backgroundImage: `url(${slides[current].image})` }}
             >
-              {/* Overlays: Multi-layer for text readability */}
+
               <div className="absolute inset-0 bg-black/50" />
               <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/20 to-transparent" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
@@ -80,7 +76,6 @@ const Banner = () => {
             {/* Content Container - Centered but aligned with common max-width */}
             <div className="relative z-20 h-full max-w-7xl mx-auto px-6 md:px-12 flex items-center">
               <div className="max-w-3xl">
-                {/* Badge Animation */}
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -101,7 +96,6 @@ const Banner = () => {
                   {slides[current].title}
                 </motion.h1>
 
-                {/* Description Animation */}
                 <motion.p
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -111,7 +105,6 @@ const Banner = () => {
                   {slides[current].description}
                 </motion.p>
 
-                {/* Buttons Animation */}
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}

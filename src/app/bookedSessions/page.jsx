@@ -1,14 +1,11 @@
 import { CancleBooking } from '@/Components/CancleBooking';
 import { auth } from '@/lib/auth';
-import { authClient } from '@/lib/auth-client';
-// import { readResponseBody } from '@/lib/http';
 import { headers } from 'next/headers';
 import Link from 'next/link';
 
 const BookedSessions = async () => {
 
     //token antaci coocie theke niye asbe and session check korbe jodi session na thake tahole login page e redirect kore debe
-
     const {token} = await auth.api.getToken({
         headers: await headers()
     }); //server side e token niye ashar jonno

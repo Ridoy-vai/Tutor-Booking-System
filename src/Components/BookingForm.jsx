@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 
 const BookingForm = ({ data }) => {
     const [isPending, setIsPending] = useState(false);
-    const [errors, setErrors] = useState({}); // ✅ NEW
+    const [errors, setErrors] = useState({});
 
     const { data: session } = authClient.useSession();
     const user = session?.user;
@@ -20,7 +20,6 @@ const BookingForm = ({ data }) => {
         totalSlots, startDate, photoUrl
     } = data;
 
-    // ✅ VALIDATION FUNCTION
     const validate = (formData) => {
         const errors = {};
 
@@ -52,13 +51,12 @@ const BookingForm = ({ data }) => {
         const formData = new FormData(e.target);
         const validationErrors = validate(formData);
 
-        // ❌ stop if error
         if (Object.keys(validationErrors).length > 0) {
             setErrors(validationErrors);
             return;
         }
 
-        setErrors({}); // clear errors
+        setErrors({}); 
 
         if (totalSlots <= 0) {
             toast.error("No available slots!");

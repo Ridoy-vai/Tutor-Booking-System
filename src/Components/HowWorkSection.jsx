@@ -89,7 +89,6 @@ export default function HowItWorks() {
           </div>
         </div>
 
-        {/* CTA */}
         <div className="text-center mt-14">
           <Link
             href="/tutors"

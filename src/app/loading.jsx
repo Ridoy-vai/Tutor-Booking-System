@@ -1,7 +1,6 @@
 'use client';
 import { useEffect, useState, useRef } from "react";
 
-// কাস্টম অ্যানিমেশন ইনজেকশন
 const customAnimations = `
 @keyframes flip {
   0%   { transform: rotateY(0deg); opacity: 1; z-index: 3; }
@@ -31,13 +30,8 @@ function BookAnimation() {
 
   return (
     <div className="relative w-24 h-20 mx-auto mb-8 [perspective:400px]">
-      {/* ব্যাক কভার */}
       <div className="absolute right-0 top-0 w-11 h-16 bg-red-100 border border-red-200 rounded-l-md rounded-r-sm shadow-sm" />
-      
-      {/* স্পাইন (বইয়ের মাঝখান) */}
       <div className="absolute left-1/2 top-0.5 -translate-x-1/2 w-1.5 h-14 bg-red-600 rounded-sm z-10" />
-      
-      {/* অ্যানিমেটেড পেজ */}
       {pages.map((p, i) => (
         <div
           key={i}
@@ -58,13 +52,12 @@ function StepIndicator({ steps, activeIdx }) {
         return (
           <div
             key={step}
-            className={`flex items-center gap-1.5 text-[10px] sm:text-xs px-3 py-1.5 rounded-full border transition-all duration-300 ${
-              isDone 
-                ? "text-green-600 border-green-200 bg-green-50" 
-                : isActive 
-                ? "text-red-600 border-red-200 bg-red-50 font-bold" 
-                : "text-gray-400 border-gray-100 bg-white"
-            }`}
+            className={`flex items-center gap-1.5 text-[10px] sm:text-xs px-3 py-1.5 rounded-full border transition-all duration-300 ${isDone
+                ? "text-green-600 border-green-200 bg-green-50"
+                : isActive
+                  ? "text-red-600 border-red-200 bg-red-50 font-bold"
+                  : "text-gray-400 border-gray-100 bg-white"
+              }`}
           >
             <div className={`w-1.5 h-1.5 rounded-full ${isDone ? 'bg-green-500' : isActive ? 'bg-red-500 animate-pulse' : 'bg-gray-300'}`} />
             {step}
@@ -87,7 +80,6 @@ export default function LoadingPage() {
     style.textContent = customAnimations;
     document.head.appendChild(style);
 
-    // প্রগ্রেস লজিক
     intervalRef.current = setInterval(() => {
       setPct((p) => {
         const next = Math.min(100, p + Math.floor(Math.random() * 5 + 2));
@@ -99,7 +91,6 @@ export default function LoadingPage() {
       });
     }, 100);
 
-    // টিপস লজিক
     const tipTimer = setInterval(() => {
       setTipVisible(false);
       setTimeout(() => {
@@ -117,13 +108,10 @@ export default function LoadingPage() {
 
   return (
     <div className="h-screen max-h-screen w-full bg-white flex flex-col items-center justify-center relative overflow-hidden font-sans select-none">
-      
-      {/* হালকা ব্যাকগ্রাউন্ড গ্রিড */}
       <div className="fixed inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#000 1px, transparent 1px)', backgroundSize: '30px 30px' }} />
 
       <div className="relative z-10 text-center max-w-md w-full px-6 flex flex-col items-center animate-in fade-in slide-in-from-bottom-4 duration-700">
-        
-        {/* লোগো সেকশন */}
+
         <div className="flex flex-col items-center mb-10">
           <h1 className="text-3xl sm:text-4xl font-black tracking-tighter text-gray-900">
             10 MINUTE <span className="text-red-600">SCHOOL</span>
@@ -131,10 +119,8 @@ export default function LoadingPage() {
           <div className="h-1 w-12 bg-red-600 rounded-full mt-1" />
         </div>
 
-        {/* এনিমেশন */}
         <BookAnimation />
 
-        {/* স্ট্যাটাস টেক্সট */}
         <div className="mb-8">
           <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-1">
             {stepIdx === 2 ? "Get Ready!" : "Setting up your class..."}
@@ -144,21 +130,19 @@ export default function LoadingPage() {
           </p>
         </div>
 
-        {/* প্রগ্রেস সেকশন */}
         <div className="w-full mb-10">
           <div className="flex justify-between text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">
             <span>Loading Data</span>
             <span className="text-red-600">{pct}%</span>
           </div>
           <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
-            <div 
+            <div
               className="h-full bg-red-600 rounded-full transition-all duration-150 ease-out"
               style={{ width: `${pct}%` }}
             />
           </div>
         </div>
 
-        {/* টিপ কার্ড */}
         <div className="w-full bg-gray-50 border border-gray-100 rounded-2xl p-5 text-left mb-10 min-h-[110px] flex flex-col justify-center shadow-sm">
           <span className="text-[10px] font-black text-red-600 uppercase tracking-widest mb-2 flex items-center gap-1">
             <span className="w-1 h-1 bg-red-600 rounded-full" /> Tip of the moment
@@ -168,25 +152,22 @@ export default function LoadingPage() {
           </p>
         </div>
 
-        {/* ফুটার স্টেপস */}
         <StepIndicator
           steps={["Connecting", "Loading", "Done"]}
           activeIdx={stepIdx}
         />
 
-        {/* ছোট লোডিং ডটস */}
         <div className="flex gap-1.5 mt-8 opacity-40">
-           {[0, 1, 2].map((i) => (
-             <div 
-               key={i} 
-               className="w-1.5 h-1.5 rounded-full bg-red-600"
-               style={{ animation: `dotBounce 1.4s ease-in-out ${i * 0.2}s infinite` }}
-             />
-           ))}
+          {[0, 1, 2].map((i) => (
+            <div
+              key={i}
+              className="w-1.5 h-1.5 rounded-full bg-red-600"
+              style={{ animation: `dotBounce 1.4s ease-in-out ${i * 0.2}s infinite` }}
+            />
+          ))}
         </div>
       </div>
 
-      {/* কাস্টম কর্নার গ্রাফিক */}
       <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-red-50 rounded-full blur-3xl opacity-50" />
       <div className="absolute -top-10 -left-10 w-40 h-40 bg-gray-50 rounded-full blur-3xl opacity-50" />
     </div>

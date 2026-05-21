@@ -1,5 +1,4 @@
 'use client';
-// import { readResponseBody } from '@/lib/http';
 import React, { useEffect, useState } from 'react';
 import {
   MapPin,
@@ -88,11 +87,8 @@ const FeaturesPage = () => {
           cache: "no-store",
         });
 
-        // const responseBody = await readResponseBody(res);
         if (!res.ok) {
           throw new Error(
-            // typeof responseBody === "object" && responseBody?.message
-              // ? responseBody.message
               "Failed to fetch featured tutors."
           );
         }

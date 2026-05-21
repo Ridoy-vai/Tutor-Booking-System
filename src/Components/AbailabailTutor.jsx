@@ -1,7 +1,6 @@
 import React from 'react';
 import { LayoutGrid, Sparkles } from 'lucide-react';
 import TutorList from './TutorList';
-// import TutorList from '@/components/TutorList'; 
 const FindTutorPage = async () => {
     const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URI}/Featurstutors`, {
         method: "GET",
@@ -16,13 +15,13 @@ const FindTutorPage = async () => {
 
     return (
         <section className="relative w-full bg-[#fdfdff] py-24 px-4 sm:px-6 lg:px-8 overflow-hidden">
-            {/* ব্যাকগ্রাউন্ড ডেকোরেশন */}
+            {/* background decoration */}
             <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-purple-50/50 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2 -z-10" />
             <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-indigo-50/50 rounded-full blur-3xl translate-x-1/2 translate-y-1/2 -z-10" />
 
             <div className="max-w-7xl mx-auto relative z-10">
                 
-                {/* হেডার সেকশন */}
+                {/* header section */}
                 <div className="text-center mb-20">
                     <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-purple-50 text-purple-600 text-[11px] font-black mb-6 border border-purple-100 shadow-sm uppercase tracking-[0.2em]">
                         <Sparkles size={14} />
@@ -38,11 +37,11 @@ const FindTutorPage = async () => {
                     </p>
                 </div>
 
-                {/* টিউটর গ্রিড (অ্যানিমেটেড ক্লায়েন্ট কম্পোনেন্ট) */}
+                {/* Tutor Grid (Animated Client Component) */}
                 {tutors.length > 0 ? (
                     <TutorList tutors={tutors} />
                 ) : (
-                    /* এম্পটি স্টেট */
+                    /* Empty State */
                     <div className="bg-white rounded-[3rem] border-2 border-dashed border-gray-100 py-24 text-center shadow-sm">
                         <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-6">
                             <LayoutGrid size={40} className="text-gray-200" />

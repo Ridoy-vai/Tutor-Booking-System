@@ -1,5 +1,4 @@
 "use client";
-// import { getResponseMessage, readResponseBody } from "@/lib/http";
 import { AlertDialog, Button } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
@@ -41,7 +40,7 @@ export function CancleBooking({ id, userId, item }) {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(UpdatebookingData)
             });
-            // const responseBody = await readResponseBody(res);
+
             const responseBody = await res.json();
             if (!res.ok) {
                 toast.error("Failed to cancel booking: " + (responseBody?.message || responseBody || "unknown error"));
@@ -79,9 +78,8 @@ export function CancleBooking({ id, userId, item }) {
                             <Button slot="close" variant="tertiary">
                                 Go Back
                             </Button>
-                            {/* slot="close" থাকার কারণে ক্লিক করলে অটোমেটিক মডালটি বন্ধ হয়ে যাবে */}
                             <Button slot="close" variant="danger" onClick={handelcancle}>
-                                Confirm Cancel
+                                Confirm Cancel Booking
                             </Button>
                         </AlertDialog.Footer>
                     </AlertDialog.Dialog>

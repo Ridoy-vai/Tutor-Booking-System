@@ -2,13 +2,13 @@
 
 import { authClient } from '@/lib/auth-client';
 import { Button, FieldError, Form, Input, Label, TextField } from '@heroui/react';
-import { useRouter } from 'next/navigation'; // সঠিক রাউটার ইমপোর্ট
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import React, { useState } from 'react';
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const SignupPage = () => {
-    const router = useRouter(); // রাউটার ইনিশিয়ালাইজ
+    const router = useRouter(); 
     const [view, setView] = useState(false);
     const [loading, setLoading] = useState(false);
 
@@ -31,7 +31,6 @@ const SignupPage = () => {
             if (error) {
                 alert(error.message || "Something went wrong!");
             } else {
-                // সফল হলে হোম পেজে পাঠানো
                 alert("Account created successfully!");
                 router.push("/");
                 router.refresh();
@@ -58,8 +57,6 @@ const SignupPage = () => {
 
     return (
         <div className="flex flex-col min-h-screen items-center justify-center p-4 bg-gray-50/50">
-            
-            {/* টাইটেল এবং ডেসক্রিপশন */}
             <div className="text-center mb-8">
                 <h1 className="text-3xl font-bold text-gray-800">Create an Account</h1>
                 <p className="text-gray-500 mt-2">Join us today! Please enter your details.</p>
@@ -121,7 +118,7 @@ const SignupPage = () => {
                         <Label>Password</Label>
                         <div className="relative w-full">
                             <Input
-                                placeholder="••••••••"
+                                placeholder="enter a strong password"
                                 className="pr-10 w-full"
                             />
                             <button

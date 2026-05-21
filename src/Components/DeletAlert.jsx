@@ -1,6 +1,5 @@
 "use client";
 import { authClient } from "@/lib/auth-client";
-// import { getResponseMessage, readResponseBody } from "@/lib/http";
 import { AlertDialog, Button } from "@heroui/react";
 import { useRouter } from "next/navigation"; 
 import { toast } from "react-toastify";
@@ -17,7 +16,7 @@ export function DeletAlert({ id, userId, item }) {
           authorization: `Bearer ${tokenData?.token}`
         },
       });
-      // const responseBody = await readResponseBody(res);
+
       const responseBody = await res.json();
       
       if (res.ok) {
@@ -45,7 +44,7 @@ export function DeletAlert({ id, userId, item }) {
             </AlertDialog.Header>
             <AlertDialog.Body>
               <p>
-                This will permanently delete <strong>{item?.fullName || "this item"}</strong> and all of its
+                This will permanently delete <strong>{item?.fullName || "this tutor"}</strong> and all of its
                 data. This action cannot be undone.
               </p>
             </AlertDialog.Body>
@@ -54,7 +53,7 @@ export function DeletAlert({ id, userId, item }) {
                 Cancel
               </Button>
               <Button slot="close" variant="danger" onClick={handleDelete}>
-                Delete
+                Confirm Delete tutor
               </Button>
             </AlertDialog.Footer>
           </AlertDialog.Dialog>

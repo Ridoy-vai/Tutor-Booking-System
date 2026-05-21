@@ -1,7 +1,5 @@
 "use client";
-
 import { authClient } from "@/lib/auth-client";
-// import { getResponseMessage, readResponseBody } from "@/lib/http";
 import { Envelope } from "@gravity-ui/icons";
 import { Button, Modal, Surface } from "@heroui/react";
 import { useRouter } from "next/navigation";
@@ -67,7 +65,6 @@ export function EaditMybooking({ id, user, item }) {
     return (
         <>
             <Button variant="secondary" onClick={() => setIsOpen(true)}>Edit</Button>
-
             <Modal isOpen={isOpen} onOpenChange={setIsOpen}>
                 <Modal.Backdrop>
                     <Modal.Container placement="auto">

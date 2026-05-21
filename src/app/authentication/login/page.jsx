@@ -1,5 +1,4 @@
 'use client';
-
 import { authClient } from '@/lib/auth-client';
 import { Button, FieldError, Form, Input, Label, TextField, } from '@heroui/react';
 import { useRouter } from 'next/navigation';
@@ -7,7 +6,6 @@ import Link from 'next/link';
 import React, { useState } from 'react';
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { toast } from 'react-toastify';
-
 
 const LoginPage = () => {
   const router = useRouter();
@@ -32,7 +30,6 @@ const LoginPage = () => {
       if (error) {
         toast.error(error.message || "Login failed. Please check your credentials.");
       } else {
-        // সফল হলে হোম পেজে পাঠানো এবং স্টেট রিফ্রেশ করা
         toast.success("Logged in successfully!");
         router.push("/");
         router.refresh();
@@ -61,8 +58,6 @@ const LoginPage = () => {
   };
   return (
     <div className="flex flex-col min-h-screen items-center justify-center p-4 bg-gray-50/50">
-      
-      {/* টাইটেল এবং সাব-টাইটেল */}
       <div className="text-center mb-8">
         <h1 className="text-3xl font-bold text-gray-800">Welcome Back</h1>
         <p className="text-gray-500 mt-2">Please enter your details to sign in.</p>

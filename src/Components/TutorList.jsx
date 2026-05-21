@@ -1,11 +1,9 @@
 'use client';
-
 import React from 'react';
 import { motion } from 'framer-motion';
 import { BookOpen, Star, GraduationCap, MapPin, Clock, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 
-// অ্যানিমেশন সেটিংস
 const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -39,7 +37,6 @@ const TutorList = ({ tutors }) => {
                     whileHover={{ y: -8 }}
                     className="group bg-white border border-gray-100 rounded-[2rem] overflow-hidden hover:shadow-[0_20px_50px_rgba(124,58,237,0.12)] transition-all duration-500 flex flex-col"
                 >
-                    {/* ইমেজ সেকশন */}
                     <div className="relative h-64 overflow-hidden">
                         <img
                             src={tutor?.photoUrl || `https://ui-avatars.com/api/?name=${tutor.fullName}&background=7c3aed&color=fff&size=512`}
@@ -47,7 +44,6 @@ const TutorList = ({ tutors }) => {
                             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                         />
                         
-                        {/* ব্যাজ */}
                         <div className="absolute top-4 left-4">
                             <span className="flex items-center gap-1.5 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-xl text-[10px] font-bold text-gray-800 shadow-sm uppercase tracking-wider">
                                 <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
@@ -60,7 +56,6 @@ const TutorList = ({ tutors }) => {
                         </div>
                     </div>
 
-                    {/* কন্টেন্ট সেকশন */}
                     <div className="p-7 flex-grow">
                         <div className="flex justify-between items-start mb-6">
                             <div>
@@ -78,7 +73,6 @@ const TutorList = ({ tutors }) => {
                             </div>
                         </div>
 
-                        {/* ইনফো লিস্ট */}
                         <div className="space-y-4">
                             <div className="flex items-center gap-3">
                                 <div className="p-2 bg-indigo-50 rounded-xl text-indigo-600">
@@ -112,7 +106,6 @@ const TutorList = ({ tutors }) => {
                         </div>
                     </div>
 
-                    {/* ফুটার */}
                     <div className="px-7 py-6 border-t border-gray-50 flex items-center justify-between bg-gray-50/30">
                         <div>
                             <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Experience</p>
