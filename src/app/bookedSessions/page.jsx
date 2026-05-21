@@ -1,7 +1,7 @@
 import { CancleBooking } from '@/Components/CancleBooking';
 import { auth } from '@/lib/auth';
 import { authClient } from '@/lib/auth-client';
-import { readResponseBody } from '@/lib/http';
+// import { readResponseBody } from '@/lib/http';
 import { headers } from 'next/headers';
 import Link from 'next/link';
 
@@ -31,7 +31,8 @@ const BookedSessions = async () => {
             },
             cache: 'no-store' // Ensures fresh data
         });
-        const responseBody = await readResponseBody(res);
+        // const responseBody = await readResponseBody(res);
+        const responseBody = await res.json();
 
         if (res.ok && Array.isArray(responseBody)) {
             myTutorsDatas = responseBody;

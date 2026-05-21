@@ -1,6 +1,6 @@
 "use client";
 
-import { readResponseBody } from "@/lib/http";
+// import { readResponseBody } from "@/lib/http";
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import {
@@ -25,8 +25,18 @@ const AllTutorsPage = () => {
   useEffect(() => {
     const fetchTutors = async () => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URI}/tutors`);
-        const data = await readResponseBody(res);
+        const res = await fetch(`https://tutor-booking-system-server.vercel.app/tutors`, {
+          cache: "no-store",
+        });
+        const data = await res.json();
+        console.log("Fetched tutors:", data);
+        if (!res.ok) {
+          throw new Error(
+            typeof data === "object" && data?.message
+              ? data.message
+              : "Failed to fetch tutors."
+          );
+        }
         if (!Array.isArray(data)) {
           throw new Error("Tutors API did not return JSON data.");
         }

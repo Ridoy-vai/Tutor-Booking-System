@@ -1,5 +1,5 @@
 "use client";
-import { readResponseBody } from "@/lib/http";
+// import { readResponseBody } from "@/lib/http";
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { FaSearch, FaMapMarkerAlt, FaBook, FaMoneyBillWave, FaCalendarAlt, FaStar } from 'react-icons/fa';
@@ -19,7 +19,7 @@ const AllTutorsPage = () => {
         const fetchTutors = async () => {
             try {
                 const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URI}/tutors`);
-                const data = await readResponseBody(res);
+                const data = await res.json();
                 if (!Array.isArray(data)) {
                     throw new Error("Tutors API did not return JSON data.");
                 }

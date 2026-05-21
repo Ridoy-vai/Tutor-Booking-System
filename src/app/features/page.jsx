@@ -1,34 +1,24 @@
 'use client';
-import { readResponseBody } from '@/lib/http';
-import React from 'react';
-import { 
-  MapPin, 
-  GraduationCap, 
-  Clock, 
-  DollarSign, 
-  Star, 
-  ArrowRight, 
-  BookOpen,
-  Monitor
+// import { readResponseBody } from '@/lib/http';
+import React, { useEffect, useState } from 'react';
+import {
+  MapPin,
+  GraduationCap,
+  Clock,
+  Star,
+  ArrowRight,
+  BookOpen
 } from 'lucide-react';
 import Link from 'next/link';
-
-const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URI}/Featurstutors`, {
-    method: "GET",
-    headers: { "Content-Type": "application/json" },
-    cache: "no-store", // সবসময় fresh data পেতে
-});
-const responseBody = await readResponseBody(res);
-const tutors = Array.isArray(responseBody) ? responseBody : [];
 
 const TutorCard = ({ tutor }) => (
   <div className="bg-white rounded-[2rem] shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 group">
     {/* Image & Badge */}
     <div className="relative p-3">
       <div className="relative h-56 w-full overflow-hidden rounded-[1.8rem]">
-        <img 
-          src={tutor?.photoUrl || `https://ui-avatars.com/api/?name=${tutor.fullName}&background=7c3aed&color=fff`} 
-          alt={tutor.fullName || "Tutor Avatar"} 
+        <img
+          src={tutor?.photoUrl || `https://ui-avatars.com/api/?name=${tutor.fullName}&background=7c3aed&color=fff`}
+          alt={tutor.fullName || "Tutor Avatar"}
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
         />
         <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full flex items-center gap-1.5 shadow-sm">
@@ -76,7 +66,7 @@ const TutorCard = ({ tutor }) => (
           <span className="text-[10px] uppercase font-bold text-gray-400 tracking-widest">Experience</span>
           <span className="text-sm font-bold text-gray-700">{tutor.experience}</span>
         </div>
-        <Link 
+        <Link
           href={`/tutors/${tutor._id}`}
           className="p-2.5 bg-gray-50 hover:bg-purple-600 text-purple-600 hover:text-white rounded-xl transition-colors group/btn"
         >
@@ -88,6 +78,35 @@ const TutorCard = ({ tutor }) => (
 );
 
 const FeaturesPage = () => {
+  const [tutors, setTutors] = useState([]);
+
+  useEffect(() => {
+    const fetchTutors = async () => {
+      try {
+        const res = await fetch("/api/featured-tutors", {
+          method: "GET",
+          cache: "no-store",
+        });
+
+        // const responseBody = await readResponseBody(res);
+        if (!res.ok) {
+          throw new Error(
+            // typeof responseBody === "object" && responseBody?.message
+              // ? responseBody.message
+              "Failed to fetch featured tutors."
+          );
+        }
+        const responseBody = await res.json();  
+        setTutors(Array.isArray(responseBody) ? responseBody : []);
+      } catch (error) {
+        console.error("Failed to fetch featured tutors:", error);
+        setTutors([]);
+      }
+    };
+
+    fetchTutors();
+  }, []);
+
   return (
     <div className="min-h-screen bg-gray-50 py-16 px-4">
       <div className="max-w-7xl mx-auto">
@@ -111,7 +130,7 @@ const FeaturesPage = () => {
 
         {/* View All Button */}
         <div className="mt-16 text-center">
-          <Link 
+          <Link
             href="/tutors"
             className="inline-flex items-center gap-2 bg-white border-2 border-purple-600 text-purple-600 px-8 py-3 rounded-full font-bold hover:bg-purple-600 hover:text-white transition-all shadow-md active:scale-95"
           >

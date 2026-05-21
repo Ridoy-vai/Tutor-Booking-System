@@ -1,6 +1,6 @@
 "use client";
 import { authClient } from "@/lib/auth-client";
-import { getResponseMessage, readResponseBody } from "@/lib/http";
+// import { getResponseMessage, readResponseBody } from "@/lib/http";
 import { AlertDialog, Button } from "@heroui/react";
 import { useRouter } from "next/navigation"; 
 import { toast } from "react-toastify";
@@ -17,8 +17,9 @@ export function DeletAlert({ id, userId, item }) {
           authorization: `Bearer ${tokenData?.token}`
         },
       });
-      const responseBody = await readResponseBody(res);
-
+      // const responseBody = await readResponseBody(res);
+      const responseBody = await res.json();
+      
       if (res.ok) {
         toast.success("Tutor deleted successfully");
         router.refresh(); 

@@ -1,7 +1,7 @@
 "use client";
 
 import { authClient } from "@/lib/auth-client";
-import { getResponseMessage, readResponseBody } from "@/lib/http";
+// import { getResponseMessage, readResponseBody } from "@/lib/http";
 import { Envelope } from "@gravity-ui/icons";
 import { Button, Modal, Surface } from "@heroui/react";
 import { useRouter } from "next/navigation";
@@ -34,8 +34,7 @@ export function EaditMybooking({ id, user, item }) {
         };
 
         try {
-            const res = await fetch(
-                `${process.env.NEXT_PUBLIC_SERVER_URI}/tutors/${userId}/${id}`,
+            const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URI}/tutors/${userId}/${id}`,
                 {
                     method: "PATCH",
                     headers: {
@@ -45,7 +44,8 @@ export function EaditMybooking({ id, user, item }) {
                     body: JSON.stringify(updateData),
                 }
             );
-            const responseBody = await readResponseBody(res);
+            // const responseBody = await readResponseBody(res);
+            const responseBody = await res.json();
 
             if (res.ok) {
                 router.refresh();

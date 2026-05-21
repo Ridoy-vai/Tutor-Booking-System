@@ -1,5 +1,5 @@
 "use client";
-import { getResponseMessage, readResponseBody } from "@/lib/http";
+// import { getResponseMessage, readResponseBody } from "@/lib/http";
 import { AlertDialog, Button } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
@@ -35,13 +35,18 @@ export function CancleBooking({ id, userId, item }) {
         };
 
         try {
+            console.log("Cancelling booking with data:", UpdatebookingData);
             const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URI}/bookings/${userId}/${id}`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(UpdatebookingData)
             });
-            const responseBody = await readResponseBody(res);
-
+            // const responseBody = await readResponseBody(res);
+            const responseBody = await res.json();
+            if (!res.ok) {
+                toast.error("Failed to cancel booking: " + (responseBody?.message || responseBody || "unknown error"));
+                return;
+            }
             if (res.ok) {
                 router.refresh(); 
                 toast.success("Booking has been cancelled.");

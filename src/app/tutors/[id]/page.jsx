@@ -1,51 +1,57 @@
 import BookingForm from '@/Components/BookingForm';
-import { getResponseMessage, readResponseBody } from '@/lib/http';
 import { notFound } from 'next/navigation';
 import React from 'react';
 import {
-    FaUser, FaEnvelope, FaBook, FaMapMarkerAlt,
+    FaEnvelope, FaBook, FaMapMarkerAlt,
     FaClock, FaUniversity, FaChalkboardTeacher,
-    FaMoneyBill, FaCalendarAlt, FaStar, FaCheckCircle
+    FaCalendarAlt, FaStar, FaCheckCircle
 } from 'react-icons/fa';
 
 const TutorProfilePage = async ({ params }) => {
 
     const { id } = await params;
-    // console.log(id);
-    const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URI}/tutors/${id}`, {
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json",
-        },
-    });
 
-    const responseBody = await readResponseBody(res);
-    if (res.status === 404) {
-        notFound();
+    // ✅ আগে status check, তারপর json parse
+    let data;
+    try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URI}/tutors/${id}`, {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+            cache: "no-store",
+        });
+
+        // ✅ 404 হলে Next.js এর not-found page দেখাবে
+        if (res.status === 404) {
+            notFound();
+        }
+
+        // ✅ অন্য error হলে throw করো
+        if (!res.ok) {
+            throw new Error(`Server error: ${res.status}`);
+        }
+
+        data = await res.json();
+
+        // ✅ data ঠিকমতো না আসলে
+        if (!data || typeof data !== "object") {
+            throw new Error("Invalid data received from server.");
+        }
+
+    } catch (error) {
+        // ✅ Server Component এ error boundary এ পাঠাও
+        throw new Error(error.message || "Failed to load tutor details.");
     }
 
-    if (!res.ok) {
-        throw new Error(getResponseMessage(responseBody, "Failed to load tutor details."));
-    }
-
-    if (!responseBody || typeof responseBody !== "object") {
-        throw new Error("Tutor details API did not return JSON data.");
-    }
-
-    const data = responseBody;
-
-    // console.log(data);
     return (
         <div className="min-h-screen bg-slate-50 py-10 px-4 md:px-8">
             <div className="max-w-7xl mx-auto">
 
-                {/* Main Grid Layout */}
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
 
-                    {/* LEFT & MIDDLE CONTENT (8 Columns) */}
+                    {/* LEFT & MIDDLE CONTENT */}
                     <div className="lg:col-span-8 space-y-6">
 
-                        {/* 1. Header Card */}
+                        {/* Header Card */}
                         <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 flex flex-col md:flex-row gap-8 items-center md:items-start">
                             <div className="relative">
                                 <img
@@ -71,7 +77,9 @@ const TutorProfilePage = async ({ params }) => {
                                 <div className="flex flex-wrap justify-center md:justify-start gap-4">
                                     <div className="bg-amber-50 px-4 py-2 rounded-xl border border-amber-100">
                                         <p className="text-xs text-amber-600 font-bold uppercase tracking-wider">Rating</p>
-                                        <p className="text-lg font-bold flex items-center gap-1">4.9 <FaStar className="text-amber-500" size={16} /></p>
+                                        <p className="text-lg font-bold flex items-center gap-1">
+                                            4.9 <FaStar className="text-amber-500" size={16} />
+                                        </p>
                                     </div>
                                     <div className="bg-indigo-50 px-4 py-2 rounded-xl border border-indigo-100">
                                         <p className="text-xs text-indigo-600 font-bold uppercase tracking-wider">Hourly Fee</p>
@@ -81,7 +89,7 @@ const TutorProfilePage = async ({ params }) => {
                             </div>
                         </div>
 
-                        {/* 2. Details Grid Card */}
+                        {/* Details Grid Card */}
                         <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100">
                             <h3 className="text-xl font-bold mb-6 border-b pb-4">Professional Information</h3>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -90,7 +98,7 @@ const TutorProfilePage = async ({ params }) => {
                                 <InfoItem icon={<FaMapMarkerAlt color="#ef4444" />} label="Location" value={data?.location} />
                                 <InfoItem icon={<FaClock color="#10b981" />} label="Experience" value={data?.experience} />
                                 <InfoItem icon={<FaChalkboardTeacher color="#f59e0b" />} label="Teaching Mode" value={data?.teachingMode} />
-                                <InfoItem icon={<FaCalendarAlt color="#6366f1" />} label="Schedule Time: " value={`${data?.startTime} to ${data?.endTime}`} />
+                                <InfoItem icon={<FaCalendarAlt color="#6366f1" />} label="Schedule Time" value={`${data?.startTime} to ${data?.endTime}`} />
                             </div>
 
                             <div className="mt-8">
@@ -100,17 +108,19 @@ const TutorProfilePage = async ({ params }) => {
                                         <FaClock size={20} />
                                     </div>
                                     <p className="text-blue-900 font-medium leading-relaxed">
-                                        End Date: {data?.startDate}
+                                        Start Date: {data?.startDate}
                                         <br />
-                                        <span className="text-blue-600 text-sm font-bold uppercase">totalSlots: {data.totalSlots}</span>
+                                        <span className="text-blue-600 text-sm font-bold uppercase">
+                                            Total Slots: {data?.totalSlots}
+                                        </span>
                                     </p>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    {/* RIGHT SIDE: BOOKING FORM (4 Columns) */}
-                   <BookingForm data={data}/>
+                    {/* RIGHT SIDE: BOOKING FORM */}
+                    <BookingForm data={data} />
 
                 </div>
             </div>
@@ -118,7 +128,6 @@ const TutorProfilePage = async ({ params }) => {
     );
 };
 
-// Helper Component for Info Items
 const InfoItem = ({ icon, label, value }) => (
     <div className="flex items-center gap-4 p-3 hover:bg-gray-50 rounded-xl transition-colors">
         <div className="text-xl">{icon}</div>

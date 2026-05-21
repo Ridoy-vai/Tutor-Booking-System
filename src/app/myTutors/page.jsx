@@ -1,7 +1,7 @@
 import { DeletAlert } from '@/Components/DeletAlert';
 import { EaditMybooking } from '@/Components/myTutorAction';
 import { auth } from '@/lib/auth';
-import { readResponseBody } from '@/lib/http';
+// import { readResponseBody } from '@/lib/http';
 import { headers } from 'next/headers';
 import Link from 'next/link';
 
@@ -18,7 +18,7 @@ const MyTutors = async () => {
     }); //server side e token niye ashar jonno
     // const {clientToken} = await authClient.Token(); //client side e token niye ashar jonno
     try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URI}/mytutors/${userId}`, {
+        const res = await fetch(`https://tutor-booking-system-server.vercel.app/mytutors/${userId}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -27,12 +27,12 @@ const MyTutors = async () => {
             },
             cache: 'no-store'
         });
-        const resData = await readResponseBody(res);
+        // const resData = await readResponseBody(res);
 
-        if (res.ok && Array.isArray(resData)) {
-            myTutorsDatas = resData;
+        if (res.ok) {
+            myTutorsDatas = await res.json();
         } else if (!res.ok) {
-            console.error("My tutors API returned non-JSON or error response:", resData);
+            console.error("My tutors API returned non-JSON or error response:",);
         }
     } catch (err) {
         console.error("Fetch error:", err);

@@ -1,6 +1,6 @@
 'use client';
 // import { authClient } from "@/lib/auth-client";
-import { getResponseMessage, readResponseBody } from "@/lib/http";
+// import { getResponseMessage, readResponseBody } from "@/lib/http";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
@@ -50,7 +50,8 @@ const Page = () => {
         },
         body: JSON.stringify(tutorData),
       });
-      const result = await readResponseBody(res);
+      // const result = await readResponseBody(res);
+      const result = await res.json();
 
       // authorization: `Bearer ${token}`,
 

@@ -1,22 +1,26 @@
 'use client';
 import { authClient } from "@/lib/auth-client";
-import { getResponseMessage, readResponseBody } from "@/lib/http";
-import { i } from "framer-motion/client";
+import { useState } from "react"; // Loading state এর জন্য
 import { toast } from "react-toastify";
-// import { revalidatePath } from "next/cache";
 
 const BookingForm = ({ data }) => {
+    const [isPending, setIsPending] = useState(false); // সাবমিট করার সময় বাটন ডিসেবল রাখার জন্য
     const { data: session } = authClient.useSession();
     const user = session?.user;
     const userId = user?.id;
 
-    const { _id, fullName, email, subject, location, institution, experience, availability, teachingMode, hourlyFee, totalSlots, startDate, photoUrl } = data;
+    // ডাটা ডিস্ট্রাকচারিং
+    const { 
+        _id, fullName, email, subject, location, institution, 
+        experience, availability, teachingMode, hourlyFee, 
+        totalSlots, startDate, photoUrl 
+    } = data;
+
     const handelBooking = async (e) => {
         e.preventDefault();
-        const { data: tokenData } = await authClient.token()
-
+        
         if (totalSlots <= 0) {
-            toast.error("not available slot!");
+            toast.error("No available slots!");
             return;
         }
 
@@ -25,83 +29,74 @@ const BookingForm = ({ data }) => {
             return;
         }
 
-        const formData = new FormData(e.target);
-        const bookingDetails = Object.fromEntries(formData.entries());
-
-        const bookingData = {
-            userId: userId || "Unknown User",
-            StudentName: user?.name,
-            StudentEmail: user?.email,
-            studentPhone: bookingDetails.mobile,
-            StudentMessage: bookingDetails.message,
-            StudentBookingDate: new Date(bookingDetails.date),
-            tutorId: _id, // ✅ _id এর বদলে tutorId — এটাই মূল fix
-            TutorName: fullName,
-            email,
-            subject,
-            location,
-            institution,
-            experience,
-            availability,
-            teachingMode,
-            hourlyFee,
-            totalSlots,
-            startDate,
-            photoUrl
-        };
+        setIsPending(true); // লোডিং শুরু
 
         try {
-            // const isbooked = await fetch(`http://localhost:1000/bookings/${_id}`);
-            // const checkData = await isbooked.json();
-            // checkData.filter((booking) => {
-            //     if (booking.tutorId === tutorId) {
-            //         toast.info("You have already booked a session with this tutor.");
-            //         return;
-            //     }
-            // });
-            // console.log("Check booking response:", checkData);
+            const { data: tokenData } = await authClient.token();
+            const formData = new FormData(e.target);
+            const bookingDetails = Object.fromEntries(formData.entries());
 
+            const bookingData = {
+                userId: userId || "Unknown User",
+                StudentName: user?.name || "Anonymous",
+                StudentEmail: user?.email,
+                studentPhone: bookingDetails.mobile,
+                StudentMessage: bookingDetails.message,
+                StudentBookingDate: bookingDetails.date,
+                tutorId: _id, 
+                TutorName: fullName,
+                email,
+                subject,
+                location,
+                institution,
+                experience,
+                availability,
+                teachingMode,
+                hourlyFee,
+                totalSlots,
+                startDate,
+                photoUrl
+            };
+
+            // ১. বুকিং রিকোয়েস্ট পাঠানো
             const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URI}/bookings`, {
                 method: "POST",
-                headers: { "Content-Type": "application/json",
+                headers: { 
+                    "Content-Type": "application/json",
                     authorization: `Bearer ${tokenData?.token}`
                  },
                 body: JSON.stringify(bookingData)
             });
 
-            const resData = await readResponseBody(res);
+            const resData = await res.json();
 
             if (!res.ok) {
-                // console.error("Booking error:", resData);
-                toast.error("Booking failed: " + (resData?.message || resData || "unknown error"));
-                return;
+                throw new Error(resData?.message || "Booking failed!");
             }
 
-
+            // ২. টিউটরের স্লট আপডেট করা
             const update = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URI}/tutors/${_id}`, {
                 method: "PATCH",
-                headers: { "Content-Type": "application/json",
+                headers: { 
+                    "Content-Type": "application/json",
                     authorization: `Bearer ${tokenData?.token}`
                 },
                 body: JSON.stringify({ totalSlots: totalSlots - 1 })
             });
-            const updateData = await readResponseBody(update);
-
-            // const updateContentType = update.headers.get("content-type");
-
 
             if (!update.ok) {
-                toast.error(getResponseMessage(updateData, "Booking successful, but there was an issue updating the slot availability."));
-                return;
+                toast.warning("Booking successful, but slot update failed.");
+            } else {
+                toast.success("Booking request submitted successfully!");
+                e.target.reset(); // ফর্ম ক্লিয়ার করা
             }
 
-            toast.success("Booking request submitted successfully!");
-            // window.location.href = `/bookedSessions`; 
         } catch (err) {
-            // console.error("Network/Parse error:", err);
-            toast.error("Failed to connect to the server. Please check if the server is running.");
+            console.error("Error:", err);
+            toast.error(err.message || "Something went wrong.");
+        } finally {
+            setIsPending(false); // লোডিং শেষ
         }
-
     };
 
     return (
@@ -114,9 +109,12 @@ const BookingForm = ({ data }) => {
                         <label className="block text-sm font-semibold text-gray-700 mb-2">Full Name</label>
                         <input
                             name="name"
+                            required
                             type="text"
+                            // defaultValue={undefined} হলে এরর দেয়, তাই fallback "" দেওয়া হয়েছে
+                            defaultValue={user?.name || ""} 
                             placeholder="Enter your full name"
-                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none"
                         />
                     </div>
 
@@ -124,9 +122,10 @@ const BookingForm = ({ data }) => {
                         <label className="block text-sm font-semibold text-gray-700 mb-2">Mobile</label>
                         <input
                             name="mobile"
+                            required
                             type="tel"
                             placeholder="Enter your mobile number"
-                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none"
                         />
                     </div>
 
@@ -135,9 +134,10 @@ const BookingForm = ({ data }) => {
                         <input
                             name="date"
                             type="date"
-                            readOnly
-                            value={new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Dhaka" })}
-                            className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-100 cursor-not-allowed outline-none"
+                            required
+                            // standard format YYYY-MM-DD নিশ্চিত করা হয়েছে
+                            defaultValue={new Date().toISOString().split('T')[0]}
+                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none"
                         />
                     </div>
 
@@ -147,19 +147,20 @@ const BookingForm = ({ data }) => {
                             name="message"
                             placeholder="Write your requirements..."
                             rows="4"
-                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none"
                         ></textarea>
                     </div>
 
                     <button
                         type="submit"
-                        disabled={data.totalSlots <= 0}
-                        className={`w-full font-bold py-4 rounded-xl transition-all transform active:scale-95 ${data.totalSlots <= 0
+                        disabled={totalSlots <= 0 || isPending}
+                        className={`w-full font-bold py-4 rounded-xl transition-all transform active:scale-95 ${
+                            (totalSlots <= 0 || isPending)
                                 ? 'bg-gray-400 cursor-not-allowed text-white'
                                 : 'bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-200'
                             }`}
                     >
-                        {data.totalSlots <= 0 ? 'No Available Slots' : 'Confirm Booking Request'}
+                        {isPending ? 'Processing...' : (totalSlots <= 0 ? 'No Available Slots' : 'Confirm Booking Request')}
                     </button>
                 </form>
             </div>
