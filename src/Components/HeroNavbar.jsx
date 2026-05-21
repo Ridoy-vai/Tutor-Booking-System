@@ -103,6 +103,7 @@ export default function HeroNavbar() {
               <Dropdown placement="bottom-end">
                 <DropdownTrigger>
                   <Avatar
+                
                     src={
                       user?.image ||
                       `https://ui-avatars.com/api/?name=${

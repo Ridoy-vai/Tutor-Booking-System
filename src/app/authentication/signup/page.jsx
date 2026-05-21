@@ -44,6 +44,18 @@ const SignupPage = () => {
         }
     };
 
+     const handleGoogleSignup = async () => {
+        try {
+          await authClient.signIn.social({
+            provider: "google",
+            callbackURL: "/",
+          });
+        } catch (error) {
+          console.error("Google Sign-In Error:", error);
+          toast.error("Google Sign-In failed. Please try again.");
+        }
+      };
+
     return (
         <div className="flex flex-col min-h-screen items-center justify-center p-4 bg-gray-50/50">
             
@@ -137,12 +149,7 @@ const SignupPage = () => {
 
                     <button
                         type="button"
-                        onClick={async () => {
-                            await authClient.signIn.social({
-                                provider: "google",
-                                callbackURL: "/",
-                            });
-                        }}
+                        onClick={handleGoogleSignup}
                         className="w-full flex items-center justify-center gap-3 border border-gray-200 rounded-xl py-3 px-4 bg-white hover:bg-gray-50 transition-all duration-200 shadow-sm"
                     >
                         <img
@@ -150,7 +157,7 @@ const SignupPage = () => {
                             alt="Google"
                             className="w-5 h-5"
                         />
-                        <span className="text-gray-700 font-medium">Google</span>
+                        <span className="text-gray-700 font-medium">Google signup</span>
                     </button>
                 </div>
 
