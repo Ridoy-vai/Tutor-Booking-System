@@ -1,5 +1,6 @@
 'use client';
 import { authClient } from "@/lib/auth-client";
+import { getResponseMessage, readResponseBody } from "@/lib/http";
 import { i } from "framer-motion/client";
 import { toast } from "react-toastify";
 // import { revalidatePath } from "next/cache";
@@ -12,6 +13,7 @@ const BookingForm = ({ data }) => {
     const { _id, fullName, email, subject, location, institution, experience, availability, teachingMode, hourlyFee, totalSlots, startDate, photoUrl } = data;
     const handelBooking = async (e) => {
         e.preventDefault();
+        const { data: tokenData } = await authClient.token()
 
         if (totalSlots <= 0) {
             toast.error("not available slot!");
@@ -61,14 +63,13 @@ const BookingForm = ({ data }) => {
 
             const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URI}/bookings`, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: { "Content-Type": "application/json",
+                    authorization: `Bearer ${tokenData?.token}`
+                 },
                 body: JSON.stringify(bookingData)
             });
 
-            const contentType = res.headers.get("content-type");
-            const resData = contentType?.includes("application/json")
-                ? await res.json()
-                : await res.text();
+            const resData = await readResponseBody(res);
 
             if (!res.ok) {
                 // console.error("Booking error:", resData);
@@ -79,16 +80,18 @@ const BookingForm = ({ data }) => {
 
             const update = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URI}/tutors/${_id}`, {
                 method: "PATCH",
-                headers: { "Content-Type": "application/json" },
+                headers: { "Content-Type": "application/json",
+                    authorization: `Bearer ${tokenData?.token}`
+                },
                 body: JSON.stringify({ totalSlots: totalSlots - 1 })
             });
+            const updateData = await readResponseBody(update);
 
             // const updateContentType = update.headers.get("content-type");
 
 
             if (!update.ok) {
-                // console.error("Tutor update error:", updateResult);
-                toast.error("Booking successful, but there was an issue updating the slot availability.");
+                toast.error(getResponseMessage(updateData, "Booking successful, but there was an issue updating the slot availability."));
                 return;
             }
 

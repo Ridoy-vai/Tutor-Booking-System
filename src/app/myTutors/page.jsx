@@ -1,6 +1,7 @@
 import { DeletAlert } from '@/Components/DeletAlert';
 import { EaditMybooking } from '@/Components/myTutorAction';
 import { auth } from '@/lib/auth';
+import { readResponseBody } from '@/lib/http';
 import { headers } from 'next/headers';
 import Link from 'next/link';
 
@@ -26,10 +27,12 @@ const MyTutors = async () => {
             },
             cache: 'no-store'
         });
-        const resData = await res.json();
+        const resData = await readResponseBody(res);
 
-        if (res.ok) {
+        if (res.ok && Array.isArray(resData)) {
             myTutorsDatas = resData;
+        } else if (!res.ok) {
+            console.error("My tutors API returned non-JSON or error response:", resData);
         }
     } catch (err) {
         console.error("Fetch error:", err);

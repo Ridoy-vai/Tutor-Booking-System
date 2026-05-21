@@ -7,6 +7,7 @@ import {
     GraduationCap,
     LayoutGrid,
 } from 'lucide-react';
+import { readResponseBody } from '@/lib/http';
 import Link from 'next/link';
 
 const FindTutorPage = async () => {
@@ -18,7 +19,8 @@ const FindTutorPage = async () => {
         cache: "no-store",
     });
 
-    const tutors = await res.json();
+    const responseBody = await readResponseBody(res);
+    const tutors = Array.isArray(responseBody) ? responseBody : [];
 
     // const limitedTutors = tutors.slice(0, 6);
 

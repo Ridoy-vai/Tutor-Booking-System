@@ -1,4 +1,5 @@
 import BookingForm from '@/Components/BookingForm';
+import { readResponseBody } from '@/lib/http';
 import React from 'react';
 import {
     FaUser, FaEnvelope, FaBook, FaMapMarkerAlt,
@@ -17,7 +18,8 @@ const TutorProfilePage = async ({ params }) => {
         },
     });
 
-    const data = await res.json();
+    const responseBody = await readResponseBody(res);
+    const data = responseBody && typeof responseBody === "object" ? responseBody : null;
 
     // console.log(data);
     return (

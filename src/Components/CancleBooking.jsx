@@ -1,9 +1,11 @@
 "use client";
+import { getResponseMessage, readResponseBody } from "@/lib/http";
 import { AlertDialog, Button } from "@heroui/react";
-import { useRouter } from "next/navigation"; // ১. useRouter ইমপোর্ট করুন
+import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
 export function CancleBooking({ id, userId, item }) {
+    
     const router = useRouter();
     const handelcancle = async () => {
         if(item.status === "Cancelled"){
@@ -38,13 +40,13 @@ export function CancleBooking({ id, userId, item }) {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(UpdatebookingData)
             });
+            const responseBody = await readResponseBody(res);
 
             if (res.ok) {
-                const data = await res.json();
                 router.refresh(); 
                 toast.success("Booking has been cancelled.");
             } else {
-                toast.error("Failed to cancel booking.");
+                toast.error(getResponseMessage(responseBody, "Failed to cancel booking."));
             }
         } catch (error) {
             console.error("Error:", error);

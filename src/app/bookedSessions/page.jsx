@@ -1,6 +1,7 @@
 import { CancleBooking } from '@/Components/CancleBooking';
 import { auth } from '@/lib/auth';
 import { authClient } from '@/lib/auth-client';
+import { readResponseBody } from '@/lib/http';
 import { headers } from 'next/headers';
 import Link from 'next/link';
 
@@ -30,8 +31,12 @@ const BookedSessions = async () => {
             },
             cache: 'no-store' // Ensures fresh data
         });
-        if (res.ok) {
-            myTutorsDatas = await res.json();
+        const responseBody = await readResponseBody(res);
+
+        if (res.ok && Array.isArray(responseBody)) {
+            myTutorsDatas = responseBody;
+        } else if (!res.ok) {
+            console.error("Bookings API returned non-JSON or error response:", responseBody);
         }
     } catch (err) {
         console.error("Fetch error:", err);

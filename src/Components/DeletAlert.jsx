@@ -1,4 +1,6 @@
 "use client";
+import { authClient } from "@/lib/auth-client";
+import { getResponseMessage, readResponseBody } from "@/lib/http";
 import { AlertDialog, Button } from "@heroui/react";
 import { useRouter } from "next/navigation"; 
 import { toast } from "react-toastify";
@@ -6,18 +8,22 @@ import { toast } from "react-toastify";
 export function DeletAlert({ id, userId, item }) {
   const router = useRouter(); 
   const handleDelete = async () => {
+    const { data: tokenData } = await authClient.token()
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URI}/tutors/${userId}/${id}`, {
         method: "DELETE",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${tokenData?.token}`
+        },
       });
+      const responseBody = await readResponseBody(res);
 
       if (res.ok) {
-        const fetchData = await res.json();
         toast.success("Tutor deleted successfully");
         router.refresh(); 
       } else {
-        toast.error("Failed to delete tutor.");
+        toast.error(getResponseMessage(responseBody, "Failed to delete tutor."));
         console.error("Failed to delete");
       }
     } catch (error) {

@@ -1,9 +1,11 @@
 "use client";
 
+import { authClient } from "@/lib/auth-client";
+import { getResponseMessage, readResponseBody } from "@/lib/http";
 import { Envelope } from "@gravity-ui/icons";
 import { Button, Modal, Surface } from "@heroui/react";
-import { useRouter } from "next/navigation"; 
-import { useState } from "react"; 
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { toast } from "react-toastify";
 
 export function EaditMybooking({ id, user, item }) {
@@ -17,6 +19,7 @@ export function EaditMybooking({ id, user, item }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const { data: tokenData } = await authClient.token()
         setLoading(true);
 
         const formData = new FormData(e.target);
@@ -35,19 +38,23 @@ export function EaditMybooking({ id, user, item }) {
                 `${process.env.NEXT_PUBLIC_SERVER_URI}/tutors/${userId}/${id}`,
                 {
                     method: "PATCH",
-                    headers: { "Content-Type": "application/json" },
+                    headers: {
+                        "Content-Type": "application/json",
+                        authorization: `Bearer ${tokenData?.token}`
+                    },
                     body: JSON.stringify(updateData),
                 }
             );
+            const responseBody = await readResponseBody(res);
 
             if (res.ok) {
-                const fetchData = await res.json();
-
                 router.refresh();
 
                 setIsOpen(false);
 
                 toast.success("Updated successfully!");
+            } else {
+                toast.error(getResponseMessage(responseBody, "Failed to update tutor."));
             }
         } catch (error) {
             console.error("Update failed:", error);

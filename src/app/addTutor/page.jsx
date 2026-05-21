@@ -1,5 +1,6 @@
 'use client';
 // import { authClient } from "@/lib/auth-client";
+import { getResponseMessage, readResponseBody } from "@/lib/http";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
@@ -49,16 +50,16 @@ const Page = () => {
         },
         body: JSON.stringify(tutorData),
       });
+      const result = await readResponseBody(res);
 
       // authorization: `Bearer ${token}`,
 
       if (res.ok) {
-        const result = await res.json();
         toast.success(result.message || "Tutor added successfully!")
         e.target.reset();
         router.push("/tutors");
       } else {
-        toast.error("Something went wrong!");
+        toast.error(getResponseMessage(result, "Something went wrong!"));
       }
 
     } catch (error) {

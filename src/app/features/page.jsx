@@ -1,4 +1,5 @@
 'use client';
+import { readResponseBody } from '@/lib/http';
 import React from 'react';
 import { 
   MapPin, 
@@ -17,7 +18,8 @@ const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URI}/Featurstutors`, {
     headers: { "Content-Type": "application/json" },
     cache: "no-store", // সবসময় fresh data পেতে
 });
-const tutors = await res.json();
+const responseBody = await readResponseBody(res);
+const tutors = Array.isArray(responseBody) ? responseBody : [];
 
 const TutorCard = ({ tutor }) => (
   <div className="bg-white rounded-[2rem] shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 group">
