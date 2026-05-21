@@ -1,24 +1,65 @@
 'use client';
+
 import { authClient } from "@/lib/auth-client";
-import { useState } from "react"; // Loading state এর জন্য
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { toast } from "react-toastify";
 
 const BookingForm = ({ data }) => {
-    const [isPending, setIsPending] = useState(false); // সাবমিট করার সময় বাটন ডিসেবল রাখার জন্য
+    const [isPending, setIsPending] = useState(false);
+    const [errors, setErrors] = useState({}); // ✅ NEW
+
     const { data: session } = authClient.useSession();
     const user = session?.user;
     const userId = user?.id;
+    const router = useRouter();
 
-    // ডাটা ডিস্ট্রাকচারিং
-    const { 
-        _id, fullName, email, subject, location, institution, 
-        experience, availability, teachingMode, hourlyFee, 
-        totalSlots, startDate, photoUrl 
+    const {
+        _id, fullName, email, subject, location, institution,
+        experience, availability, teachingMode, hourlyFee,
+        totalSlots, startDate, photoUrl
     } = data;
+
+    // ✅ VALIDATION FUNCTION
+    const validate = (formData) => {
+        const errors = {};
+
+        const name = formData.get("name")?.trim();
+        const mobile = formData.get("mobile")?.trim();
+
+        // NAME: min 3 chars
+        if (!name) {
+            errors.name = "Name is required";
+        } else if (name.length < 3) {
+            errors.name = "Name must be at least 3 characters";
+        }
+
+        // MOBILE: only 11 digits
+        const mobileRegex = /^[0-9]{11}$/;
+
+        if (!mobile) {
+            errors.mobile = "Mobile number is required";
+        } else if (!mobileRegex.test(mobile)) {
+            errors.mobile = "Mobile must be exactly 11 digits (numbers only)";
+        }
+
+        return errors;
+    };
 
     const handelBooking = async (e) => {
         e.preventDefault();
-        
+
+        const formData = new FormData(e.target);
+        const validationErrors = validate(formData);
+
+        // ❌ stop if error
+        if (Object.keys(validationErrors).length > 0) {
+            setErrors(validationErrors);
+            return;
+        }
+
+        setErrors({}); // clear errors
+
         if (totalSlots <= 0) {
             toast.error("No available slots!");
             return;
@@ -29,11 +70,10 @@ const BookingForm = ({ data }) => {
             return;
         }
 
-        setIsPending(true); // লোডিং শুরু
+        setIsPending(true);
 
         try {
             const { data: tokenData } = await authClient.token();
-            const formData = new FormData(e.target);
             const bookingDetails = Object.fromEntries(formData.entries());
 
             const bookingData = {
@@ -43,7 +83,7 @@ const BookingForm = ({ data }) => {
                 studentPhone: bookingDetails.mobile,
                 StudentMessage: bookingDetails.message,
                 StudentBookingDate: bookingDetails.date,
-                tutorId: _id, 
+                tutorId: _id,
                 TutorName: fullName,
                 email,
                 subject,
@@ -58,13 +98,12 @@ const BookingForm = ({ data }) => {
                 photoUrl
             };
 
-            // ১. বুকিং রিকোয়েস্ট পাঠানো
             const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URI}/bookings`, {
                 method: "POST",
-                headers: { 
+                headers: {
                     "Content-Type": "application/json",
                     authorization: `Bearer ${tokenData?.token}`
-                 },
+                },
                 body: JSON.stringify(bookingData)
             });
 
@@ -74,10 +113,9 @@ const BookingForm = ({ data }) => {
                 throw new Error(resData?.message || "Booking failed!");
             }
 
-            // ২. টিউটরের স্লট আপডেট করা
             const update = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URI}/tutors/${_id}`, {
                 method: "PATCH",
-                headers: { 
+                headers: {
                     "Content-Type": "application/json",
                     authorization: `Bearer ${tokenData?.token}`
                 },
@@ -88,79 +126,101 @@ const BookingForm = ({ data }) => {
                 toast.warning("Booking successful, but slot update failed.");
             } else {
                 toast.success("Booking request submitted successfully!");
-                e.target.reset(); // ফর্ম ক্লিয়ার করা
+                e.target.reset();
+                router.refresh();
             }
 
         } catch (err) {
-            console.error("Error:", err);
             toast.error(err.message || "Something went wrong.");
         } finally {
-            setIsPending(false); // লোডিং শেষ
+            setIsPending(false);
         }
     };
 
     return (
         <div className="lg:col-span-4">
             <div className="bg-white rounded-3xl p-6 shadow-xl border border-gray-100 sticky top-10">
-                <h3 className="text-2xl font-bold text-gray-800 mb-6">Book a Session</h3>
+                <h3 className="text-2xl font-bold text-gray-800 mb-6">
+                    Book a Session
+                </h3>
 
                 <form onSubmit={handelBooking} className="space-y-4">
+
+                    {/* NAME */}
                     <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">Full Name</label>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                            Full Name
+                        </label>
                         <input
                             name="name"
-                            required
                             type="text"
-                            // defaultValue={undefined} হলে এরর দেয়, তাই fallback "" দেওয়া হয়েছে
-                            defaultValue={user?.name || ""} 
                             placeholder="Enter your full name"
-                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none"
+                            className="w-full px-4 py-3 rounded-xl border"
                         />
+                        {errors.name && (
+                            <p className="text-red-500 text-sm mt-1">{errors.name}</p>
+                        )}
                     </div>
 
+                    {/* MOBILE */}
                     <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">Mobile</label>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                            Mobile
+                        </label>
                         <input
                             name="mobile"
-                            required
                             type="tel"
+                            inputMode="numeric"
+                            maxLength={11}
                             placeholder="Enter your mobile number"
-                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none"
+                            className="w-full px-4 py-3 rounded-xl border"
                         />
+                        {errors.mobile && (
+                            <p className="text-red-500 text-sm mt-1">{errors.mobile}</p>
+                        )}
                     </div>
 
+                    {/* DATE */}
                     <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">Joining Date</label>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                            Joining Date
+                        </label>
                         <input
                             name="date"
                             type="date"
-                            required
-                            // standard format YYYY-MM-DD নিশ্চিত করা হয়েছে
+                            readOnly
                             defaultValue={new Date().toISOString().split('T')[0]}
-                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none"
+                            className="w-full px-4 py-3 rounded-xl border"
                         />
                     </div>
 
+                    {/* MESSAGE */}
                     <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">Message (Optional)</label>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                            Message (Optional)
+                        </label>
                         <textarea
                             name="message"
-                            placeholder="Write your requirements..."
                             rows="4"
-                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none"
-                        ></textarea>
+                            className="w-full px-4 py-3 rounded-xl border"
+                        />
                     </div>
 
+                    {/* BUTTON */}
                     <button
                         type="submit"
                         disabled={totalSlots <= 0 || isPending}
-                        className={`w-full font-bold py-4 rounded-xl transition-all transform active:scale-95 ${
-                            (totalSlots <= 0 || isPending)
-                                ? 'bg-gray-400 cursor-not-allowed text-white'
-                                : 'bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-200'
-                            }`}
+                        className={`w-full font-bold py-4 rounded-xl ${
+                            totalSlots <= 0 || isPending
+                                ? "bg-gray-400 cursor-not-allowed text-white"
+                                : "bg-blue-600 hover:bg-blue-700 text-white"
+                        }`}
                     >
-                        {isPending ? 'Processing...' : (totalSlots <= 0 ? 'No Available Slots' : 'Confirm Booking Request')}
+                        {isPending
+                            ? "Processing..."
+                            : totalSlots <= 0
+                            ? "No Available Slots"
+                            : "Confirm Booking Request"}
                     </button>
                 </form>
             </div>
