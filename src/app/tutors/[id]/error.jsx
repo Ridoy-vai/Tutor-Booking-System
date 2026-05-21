@@ -1,218 +1,130 @@
 'use client';
-import { useEffect, useState } from "react";
 
-const styles = {
-   
-    main: {
-        flex: 1,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: "4rem 2rem",
-        background: "#FDFAF4",
-        minHeight: "calc(100vh - 120px)",
-        position: "relative",
-        overflow: "hidden",
-    },
-    orbRed: {
-        position: "absolute",
-        top: -100, right: -100,
-        width: 380, height: 380,
-        background: "#FDECEA",
-        borderRadius: "50%",
-        pointerEvents: "none",
-    },
-    orbGold: {
-        position: "absolute",
-        bottom: -80, left: -80,
-        width: 260, height: 260,
-        background: "#FEF5DF",
-        borderRadius: "50%",
-        pointerEvents: "none",
-    },
-    card: {
-        position: "relative",
-        zIndex: 1,
-        background: "#fff",
-        borderRadius: 24,
-        border: "1.5px solid #E4DDD0",
-        padding: "4rem 3.5rem",
-        maxWidth: 520,
-        width: "100%",
-        textAlign: "center",
-        boxShadow: "0 12px 48px rgba(13,27,42,0.09)",
-    },
-    iconRing: {
-        width: 88, height: 88,
-        margin: "0 auto 1.75rem",
-        background: "#FDECEA",
-        borderRadius: "50%",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        border: "6px solid #fce8e6",
-    },
-    code: {
-        fontFamily: "'Playfair Display', Georgia, serif",
-        fontSize: "6rem",
-        fontWeight: 900,
-        color: "#C0392B",
-        lineHeight: 1,
-        letterSpacing: "-4px",
-        marginBottom: "0.25rem",
-    },
-    title: {
-        fontFamily: "'Playfair Display', Georgia, serif",
-        fontSize: "1.6rem",
-        fontWeight: 700,
-        color: "#0D1B2A",
-        marginBottom: "0.85rem",
-    },
-    desc: {
-        color: "#6B7A8D",
-        fontSize: "0.95rem",
-        lineHeight: 1.75,
-        marginBottom: "2rem",
-    },
-    actions: { display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" },
-    btnPrimary: {
-        background: "#0D1B2A",
-        color: "#fff",
-        padding: "0.8rem 1.85rem",
-        borderRadius: 10,
-        fontFamily: "'Hind Siliguri', sans-serif",
-        fontSize: "0.95rem",
-        fontWeight: 600,
-        cursor: "pointer",
-        border: "none",
-        transition: "background 0.2s, transform 0.15s",
-    },
-    btnOutline: {
-        background: "transparent",
-        color: "#0D1B2A",
-        padding: "0.8rem 1.85rem",
-        borderRadius: 10,
-        fontFamily: "'Hind Siliguri', sans-serif",
-        fontSize: "0.95rem",
-        fontWeight: 600,
-        cursor: "pointer",
-        border: "1.5px solid #E4DDD0",
-        transition: "border-color 0.2s, transform 0.15s",
-    },
-    tip: {
-        marginTop: "2rem",
-        padding: "1rem 1.25rem",
-        background: "#fffbf0",
-        borderLeft: "3px solid #E8A020",
-        borderRadius: "0 8px 8px 0",
-        fontSize: "0.85rem",
-        color: "#7a5c10",
-        textAlign: "left",
-        lineHeight: 1.6,
-    },
-    divider: {
-        margin: "2rem 0 1.5rem",
-        display: "flex",
-        alignItems: "center",
-        gap: 12,
-        color: "#6B7A8D",
-        fontSize: "0.8rem",
-        position: "relative",
-    },
-    dividerLine: { flex: 1, height: 1, background: "#E4DDD0" },
-    detailBox: {
-        background: "#fafafa",
-        border: "1px solid #E4DDD0",
-        borderRadius: 10,
-        padding: "1rem",
-        textAlign: "left",
-        fontSize: "0.8rem",
-        color: "#6B7A8D",
-    },
-    inlineCode: {
-        fontFamily: "monospace",
-        background: "#f0ede8",
-        padding: "1px 5px",
-        borderRadius: 3,
-        fontSize: "0.78rem",
-        color: "#C0392B",
-    },
-   
-};
+import React, { useEffect, useState } from "react";
 
-export default function ErrorPage() {
-    const [now, setNow] = useState("");
-    const [path, setPath] = useState("/");
+export default function Error500() {
+  const [now, setNow] = useState("");
+  const [path, setPath] = useState("/");
 
-    useEffect(() => {
-        setNow(new Date().toLocaleString("bn-BD"));
-        setPath(window.location.pathname || "/dashboard");
-        const link = document.createElement("link");
-        link.rel = "stylesheet";
-        link.href = "https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Playfair+Display:wght@700;900&display=swap";
-        document.head.appendChild(link);
-    }, []);
+  useEffect(() => {
+    setNow(new Date().toLocaleTimeString());
+    setPath(window.location.pathname);
+  }, []);
 
-    return (
-        <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh", fontFamily: "'Hind Siliguri', sans-serif" }}>
+  return (
+    <div className="w-full max-h-screen h-screen bg-[#FDFAF4] font-sans overflow-hidden relative flex items-center justify-center px-6">
 
-            {/* MAIN */}
-            <main style={styles.main}>
-                <div style={styles.orbRed} />
-                <div style={styles.orbGold} />
+      {/* Background Orbs */}
+      <div className="absolute -top-24 -right-24 w-[400px] h-[400px] bg-[#FDECEA] rounded-full opacity-70 pointer-events-none" />
+      <div className="absolute -bottom-20 -left-20 w-[300px] h-[300px] bg-[#FEF5DF] rounded-full opacity-70 pointer-events-none" />
 
-                <div style={styles.card}>
-                    {/* Icon */}
-                    <div style={styles.iconRing}>
-                        <svg width="38" height="38" viewBox="0 0 38 38" fill="none">
-                            <circle cx="19" cy="19" r="17" stroke="#C0392B" strokeWidth="2.5" />
-                            <path d="M19 11v9" stroke="#C0392B" strokeWidth="2.5" strokeLinecap="round" />
-                            <circle cx="19" cy="26.5" r="1.5" fill="#C0392B" />
-                        </svg>
-                    </div>
+      {/* Content Wrapper */}
+      <main className="relative z-10 w-full max-w-7xl flex items-center justify-center">
 
-                    <div style={styles.code}>500</div>
-                    <div style={styles.title}>সার্ভারে সমস্যা হয়েছে</div>
-                    <p style={styles.desc}>
-                        দুঃখিত! আমাদের সার্ভারে একটি অপ্রত্যাশিত সমস্যা হয়েছে।
-                        আপনার পেজটি এই মুহূর্তে লোড করা সম্ভব হচ্ছে না।
-                        আমরা এটি দ্রুত ঠিক করতে কাজ করছি।
-                    </p>
+        {/* Card */}
+        <div className="bg-white rounded-[32px] border border-[#E4DDD0] p-8 md:px-16 md:py-10 w-full max-w-7xl text-center shadow-[0_20px_60px_rgba(13,27,42,0.06)]">
 
-                    <div style={styles.actions}>
-                        <button style={styles.btnPrimary} onClick={() => window.location.reload()}>
-                            🔄 আবার চেষ্টা করুন
-                        </button>
-                        <button style={styles.btnOutline} onClick={() => (window.location.href = "/")}>
-                            🏠 হোমে যান
-                        </button>
-                    </div>
+          {/* Error Icon */}
+          <div className="w-16 h-16 mx-auto mb-4 bg-[#FDECEA] rounded-2xl flex items-center justify-center -rotate-12">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#C0392B" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M21.73 18L13.73 4a2 2 0 0 0-3.48 0L2.25 18A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+              <line x1="12" y1="9" x2="12" y2="13" />
+              <line x1="12" y1="17" x2="12.01" y2="17" />
+            </svg>
+          </div>
 
-                    <div style={styles.tip}>
-                        💡 <strong>সাহায্য দরকার?</strong> সমস্যা চলতে থাকলে আমাদের সাপোর্ট টিমে যোগাযোগ করুন —{" "}
-                        <strong>support@shikkhabd.com</strong> অথবা <strong>01700-000000</strong>
-                    </div>
+          {/* Status Code */}
+          <h1 className="text-[5rem] font-black text-[#C0392B] leading-none tracking-tighter mb-2">
+            500
+          </h1>
 
-                    {/* Divider */}
-                    <div style={styles.divider}>
-                        <div style={styles.dividerLine} />
-                        <span>ত্রুটির বিস্তারিত</span>
-                        <div style={styles.dividerLine} />
-                    </div>
+          {/* Title */}
+          <h2 className="text-3xl font-extrabold text-[#0D1B2A] mb-2">
+            Internal Server Error
+          </h2>
 
-                    <div style={styles.detailBox}>
-                        <p style={{ marginBottom: 4 }}>
-                            ❌ Error Code: <code style={styles.inlineCode}>INTERNAL_SERVER_ERROR</code>
-                        </p>
-                        <p style={{ marginBottom: 4 }}>
-                            🕐 সময়: <code style={styles.inlineCode}>{now}</code>
-                        </p>
-                        <p>
-                            🔗 Path: <code style={styles.inlineCode}>{path}</code>
-                        </p>
-                    </div>
-                </div>
-            </main>
+          {/* Description */}
+          <p className="text-[#6B7A8D] text-base leading-relaxed mb-8 max-w-[500px] mx-auto">
+            Something went wrong on our server. We are currently fixing the issue and will be back shortly.
+          </p>
+
+          {/* Buttons */}
+          <div className="flex flex-wrap items-center justify-center gap-4 mb-8">
+
+            <button
+              onClick={() => window.location.reload()}
+              className="bg-[#0D1B2A] text-white px-8 py-3.5 rounded-xl font-bold text-sm hover:opacity-90 transition active:scale-95 shadow-lg"
+            >
+              Try Again
+            </button>
+
+            <button
+              onClick={() => (window.location.href = "/")}
+              className="border border-[#E4DDD0] text-[#0D1B2A] px-8 py-3.5 rounded-xl font-bold text-sm hover:bg-gray-50 transition active:scale-95"
+            >
+              Back to Home
+            </button>
+
+          </div>
+
+          {/* Technical Divider */}
+          <div className="flex items-center gap-4 mb-4">
+
+            <div className="flex-1 h-[1px] bg-[#E4DDD0]" />
+
+            <span className="text-[10px] uppercase font-bold tracking-[2px] text-[#A0AEC0]">
+              Technical Details
+            </span>
+
+            <div className="flex-1 h-[1px] bg-[#E4DDD0]" />
+
+          </div>
+
+          {/* Details */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 bg-[#FAFAFA] border border-gray-100 rounded-2xl p-4 text-left">
+
+            <div>
+              <span className="block text-[10px] font-bold text-[#A0AEC0] uppercase mb-1">
+                Error Code
+              </span>
+              <span className="text-xs font-mono font-bold text-[#4A5568]">
+                SERVER_ERR_500
+              </span>
+            </div>
+
+            <div>
+              <span className="block text-[10px] font-bold text-[#A0AEC0] uppercase mb-1">
+                Timestamp
+              </span>
+              <span className="text-xs font-mono font-bold text-[#4A5568]">
+                {now}
+              </span>
+            </div>
+
+            <div>
+              <span className="block text-[10px] font-bold text-[#A0AEC0] uppercase mb-1">
+                Endpoint
+              </span>
+              <span className="text-xs font-mono font-bold text-[#4A5568] truncate block">
+                {path}
+              </span>
+            </div>
+
+          </div>
+
+          {/* Support */}
+          <p className="mt-6 text-sm text-[#6B7A8D]">
+            Need help? Contact{" "}
+            <a
+              href="mailto:support@shikkhabd.com"
+              className="text-[#C0392B] font-bold hover:underline"
+            >
+              support@shikkhabd.com
+            </a>
+          </p>
+
         </div>
-    );
+      </main>
+    </div>
+  );
 }

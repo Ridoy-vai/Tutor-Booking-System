@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState, useRef } from "react";
 
-// Custom animations that aren't standard in Tailwind
+// কাস্টম অ্যানিমেশন ইনজেকশন
 const customAnimations = `
 @keyframes flip {
   0%   { transform: rotateY(0deg); opacity: 1; z-index: 3; }
@@ -12,40 +12,36 @@ const customAnimations = `
   0%, 100% { transform: scale(0.65); opacity: 0.4; }
   50%     { transform: scale(1.1); opacity: 1; }
 }
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
 `;
 
 const tips = [
-  "ShikkhaBD has 500+ experienced tutors ready to help you.",
-  "Studying just 1 hour daily adds up to 365 hours of learning a year!",
-  "We offer specialized courses for HSC, SSC, and University Admissions.",
-  "Live classes, recorded videos, and personal guidance — all in one place.",
-  "Our tutors are graduates from top institutions like Dhaka University.",
+  "10 Minute School has 25,000+ free educational videos.",
+  "Learn anything from Class 1-12, BCS, and Skill Development.",
+  "Over 3 million students learn every day with our platform.",
+  "Unlock your potential with interactive live classes and quizzes.",
+  "Check out our specialized courses for University Admission preparation.",
 ];
 
 function BookAnimation() {
   const pages = [
-    { bg: "bg-[#FEF5DF]", delay: "0s" },
-    { bg: "bg-[#fffbf2]", delay: "0.35s" },
-    { bg: "bg-[#fff8e8]", delay: "0.7s" },
+    { bg: "bg-red-50", delay: "0s" },
+    { bg: "bg-white", delay: "0.35s" },
+    { bg: "bg-gray-50", delay: "0.7s" },
   ];
 
   return (
-    <div className="relative w-[100px] h-[80px] mx-auto mb-10 [perspective:400px]">
-      {/* Back cover */}
-      <div className="absolute right-0 top-0 w-[46px] h-[72px] bg-[#d4cdc4] border-[1.5px] border-[#bab3aa] rounded-l-[5px] rounded-r-[2px] border-r-0" />
+    <div className="relative w-24 h-20 mx-auto mb-8 [perspective:400px]">
+      {/* ব্যাক কভার */}
+      <div className="absolute right-0 top-0 w-11 h-16 bg-red-100 border border-red-200 rounded-l-md rounded-r-sm shadow-sm" />
       
-      {/* Spine */}
-      <div className="absolute left-1/2 top-1 -translate-x-1/2 w-1.5 h-16 bg-[#0D1B2A] rounded-sm z-10" />
+      {/* স্পাইন (বইয়ের মাঝখান) */}
+      <div className="absolute left-1/2 top-0.5 -translate-x-1/2 w-1.5 h-14 bg-red-600 rounded-sm z-10" />
       
-      {/* Animated Pages */}
+      {/* অ্যানিমেটেড পেজ */}
       {pages.map((p, i) => (
         <div
           key={i}
-          className={`absolute left-1/2 top-1 w-[46px] h-16 ${p.bg} border-[1.5px] border-[#E8A020] border-l-0 rounded-r-[5px] origin-left [transform-style:preserve-3d] [backface-visibility:hidden]`}
+          className={`absolute left-1/2 top-0.5 w-11 h-14 ${p.bg} border border-red-200 border-l-0 rounded-r-md origin-left [transform-style:preserve-3d] [backface-visibility:hidden]`}
           style={{ animation: `flip 1.8s ease-in-out ${p.delay} infinite` }}
         />
       ))}
@@ -55,22 +51,22 @@ function BookAnimation() {
 
 function StepIndicator({ steps, activeIdx }) {
   return (
-    <div className="flex justify-center gap-2.5">
+    <div className="flex justify-center items-center gap-2 sm:gap-4 w-full">
       {steps.map((step, i) => {
         const isDone = i < activeIdx;
         const isActive = i === activeIdx;
         return (
           <div
             key={step}
-            className={`flex items-center gap-1.5 text-[0.78rem] px-3 py-1.5 rounded-full border transition-all duration-300 ${
+            className={`flex items-center gap-1.5 text-[10px] sm:text-xs px-3 py-1.5 rounded-full border transition-all duration-300 ${
               isDone 
-                ? "text-[#1A6B45] border-[#c5e8d9] bg-[#edf8f3]" 
+                ? "text-green-600 border-green-200 bg-green-50" 
                 : isActive 
-                ? "text-[#7a5000] border-[#E8A020] bg-[#FEF5DF] font-semibold" 
-                : "text-[#6B7A8D] border-[#E4DDD0] bg-white"
+                ? "text-red-600 border-red-200 bg-red-50 font-bold" 
+                : "text-gray-400 border-gray-100 bg-white"
             }`}
           >
-            <div className={`w-1.5 h-1.5 rounded-full bg-current ${isActive ? "animate-pulse" : ""}`} />
+            <div className={`w-1.5 h-1.5 rounded-full ${isDone ? 'bg-green-500' : isActive ? 'bg-red-500 animate-pulse' : 'bg-gray-300'}`} />
             {step}
           </div>
         );
@@ -87,31 +83,30 @@ export default function LoadingPage() {
   const intervalRef = useRef(null);
 
   useEffect(() => {
-    // Inject custom keyframes
     const style = document.createElement("style");
     style.textContent = customAnimations;
     document.head.appendChild(style);
 
-    // Progress Logic
+    // প্রগ্রেস লজিক
     intervalRef.current = setInterval(() => {
       setPct((p) => {
-        const next = Math.min(100, p + Math.floor(Math.random() * 4 + 1));
+        const next = Math.min(100, p + Math.floor(Math.random() * 5 + 2));
         if (next >= 100) {
           clearInterval(intervalRef.current);
           setStepIdx(2);
         }
         return next;
       });
-    }, 90);
+    }, 100);
 
-    // Tips Rotation Logic
+    // টিপস লজিক
     const tipTimer = setInterval(() => {
       setTipVisible(false);
       setTimeout(() => {
         setTipIdx((i) => (i + 1) % tips.length);
         setTipVisible(true);
       }, 400);
-    }, 3200);
+    }, 3500);
 
     return () => {
       clearInterval(intervalRef.current);
@@ -121,74 +116,79 @@ export default function LoadingPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#FDFAF4] flex flex-col items-center justify-center relative overflow-hidden font-sans">
-      {/* Background Texture */}
-      <div 
-        className="fixed inset-0 opacity-[0.35] pointer-events-none" 
-        style={{ backgroundImage: "radial-gradient(circle, #d4c9b8 1px, transparent 1px)", backgroundSize: "28px 28px" }} 
-      />
+    <div className="h-screen max-h-screen w-full bg-white flex flex-col items-center justify-center relative overflow-hidden font-sans select-none">
+      
+      {/* হালকা ব্যাকগ্রাউন্ড গ্রিড */}
+      <div className="fixed inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#000 1px, transparent 1px)', backgroundSize: '30px 30px' }} />
 
-      <div className="relative z-10 text-center max-w-[440px] w-full p-8 animate-[fadeUp_0.6s_ease_both]">
+      <div className="relative z-10 text-center max-w-md w-full px-6 flex flex-col items-center animate-in fade-in slide-in-from-bottom-4 duration-700">
         
-        {/* Logo */}
-        <div className="font-serif text-[2.2rem] font-black text-[#0D1B2A] tracking-tighter mb-12">
-          Shikkha<span className="text-[#E8A020]">BD</span>
+        {/* লোগো সেকশন */}
+        <div className="flex flex-col items-center mb-10">
+          <h1 className="text-3xl sm:text-4xl font-black tracking-tighter text-gray-900">
+            10 MINUTE <span className="text-red-600">SCHOOL</span>
+          </h1>
+          <div className="h-1 w-12 bg-red-600 rounded-full mt-1" />
         </div>
 
-        {/* Animation */}
+        {/* এনিমেশন */}
         <BookAnimation />
 
-        {/* Status Text */}
-        <div className="font-serif text-2xl font-bold text-[#0D1B2A] mb-2 transition-all">
-          {stepIdx === 2 ? "Almost ready!" : "Loading..."}
-        </div>
-        <p className="text-[#6B7A8D] text-[0.9rem] mb-10 leading-relaxed">
-          Your educational journey is about to begin. <br /> Please wait a moment.
-        </p>
-
-        {/* Progress Bar Container */}
-        <div className="w-full h-[7px] bg-[#E4DDD0] rounded-full mb-2 overflow-hidden">
-          <div 
-            className="h-full bg-gradient-to-r from-[#0D1B2A] to-[#E8A020] rounded-full transition-all duration-100 ease-linear"
-            style={{ width: `${pct}%` }}
-          />
-        </div>
-        
-        <div className="text-right text-[0.78rem] text-[#6B7A8D] font-bold mb-8">
-          {pct}%
+        {/* স্ট্যাটাস টেক্সট */}
+        <div className="mb-8">
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-1">
+            {stepIdx === 2 ? "Get Ready!" : "Setting up your class..."}
+          </h2>
+          <p className="text-gray-500 text-sm">
+            Please wait while we load your learning experience.
+          </p>
         </div>
 
-        {/* Animated Loading Dots */}
-        <div className="flex justify-center gap-2 mb-10">
-          {[
-            { color: "bg-[#E8A020]", delay: "0s" },
-            { color: "bg-[#0D1B2A]", delay: "0.2s" },
-            { color: "bg-[#E8A020]", delay: "0.4s" },
-          ].map((d, i) => (
+        {/* প্রগ্রেস সেকশন */}
+        <div className="w-full mb-10">
+          <div className="flex justify-between text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">
+            <span>Loading Data</span>
+            <span className="text-red-600">{pct}%</span>
+          </div>
+          <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
             <div 
-              key={i} 
-              className={`w-2 h-2 rounded-full ${d.color}`}
-              style={{ animation: `dotBounce 1.4s ease-in-out ${d.delay} infinite` }}
+              className="h-full bg-red-600 rounded-full transition-all duration-150 ease-out"
+              style={{ width: `${pct}%` }}
             />
-          ))}
-        </div>
-
-        {/* Tip Card */}
-        <div className="bg-white border-[1.5px] border-[#E4DDD0] rounded-2xl p-5 text-left mb-8 min-h-[100px] shadow-sm">
-          <div className="text-[0.72rem] font-bold text-[#E8A020] uppercase tracking-[1.5px] mb-2">
-            ✨ Did you know?
-          </div>
-          <div className={`text-[0.88rem] text-[#6B7A8D] leading-relaxed transition-opacity duration-400 ${tipVisible ? 'opacity-100' : 'opacity-0'}`}>
-            {tips[tipIdx]}
           </div>
         </div>
 
-        {/* Step Timeline */}
+        {/* টিপ কার্ড */}
+        <div className="w-full bg-gray-50 border border-gray-100 rounded-2xl p-5 text-left mb-10 min-h-[110px] flex flex-col justify-center shadow-sm">
+          <span className="text-[10px] font-black text-red-600 uppercase tracking-widest mb-2 flex items-center gap-1">
+            <span className="w-1 h-1 bg-red-600 rounded-full" /> Tip of the moment
+          </span>
+          <p className={`text-sm text-gray-600 font-medium leading-relaxed transition-opacity duration-500 ${tipVisible ? 'opacity-100' : 'opacity-0'}`}>
+            "{tips[tipIdx]}"
+          </p>
+        </div>
+
+        {/* ফুটার স্টেপস */}
         <StepIndicator
-          steps={["Connecting", "Loading", "Ready"]}
+          steps={["Connecting", "Loading", "Done"]}
           activeIdx={stepIdx}
         />
+
+        {/* ছোট লোডিং ডটস */}
+        <div className="flex gap-1.5 mt-8 opacity-40">
+           {[0, 1, 2].map((i) => (
+             <div 
+               key={i} 
+               className="w-1.5 h-1.5 rounded-full bg-red-600"
+               style={{ animation: `dotBounce 1.4s ease-in-out ${i * 0.2}s infinite` }}
+             />
+           ))}
+        </div>
       </div>
+
+      {/* কাস্টম কর্নার গ্রাফিক */}
+      <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-red-50 rounded-full blur-3xl opacity-50" />
+      <div className="absolute -top-10 -left-10 w-40 h-40 bg-gray-50 rounded-full blur-3xl opacity-50" />
     </div>
   );
 }

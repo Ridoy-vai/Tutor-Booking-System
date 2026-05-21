@@ -4,14 +4,12 @@ import React from 'react';
 import {
     FaEnvelope, FaBook, FaMapMarkerAlt,
     FaClock, FaUniversity, FaChalkboardTeacher,
-    FaCalendarAlt, FaStar, FaCheckCircle
+    FaCalendarAlt, FaStar, FaCheckCircle, FaGraduationCap, FaLayerGroup
 } from 'react-icons/fa';
 
 const TutorProfilePage = async ({ params }) => {
-
     const { id } = await params;
 
-    // ✅ আগে status check, তারপর json parse
     let data;
     try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URI}/tutors/${id}`, {
@@ -20,107 +18,100 @@ const TutorProfilePage = async ({ params }) => {
             cache: "no-store",
         });
 
-        // ✅ 404 হলে Next.js এর not-found page দেখাবে
-        if (res.status === 404) {
-            notFound();
-        }
-
-        // ✅ অন্য error হলে throw করো
-        if (!res.ok) {
-            throw new Error(`Server error: ${res.status}`);
-        }
-
+        if (res.status === 404) notFound();
+        if (!res.ok) throw new Error(`Server error: ${res.status}`);
         data = await res.json();
-
-        // ✅ data ঠিকমতো না আসলে
-        if (!data || typeof data !== "object") {
-            throw new Error("Invalid data received from server.");
-        }
-
     } catch (error) {
-        // ✅ Server Component এ error boundary এ পাঠাও
         throw new Error(error.message || "Failed to load tutor details.");
     }
 
     return (
-        <div className="min-h-screen bg-slate-50 py-10 px-4 md:px-8">
-            <div className="max-w-7xl mx-auto">
-
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-
-                    {/* LEFT & MIDDLE CONTENT */}
-                    <div className="lg:col-span-8 space-y-6">
-
-                        {/* Header Card */}
-                        <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 flex flex-col md:flex-row gap-8 items-center md:items-start">
-                            <div className="relative">
-                                <img
-                                    src={data?.photoUrl}
-                                    alt={data?.fullName}
-                                    className="w-48 h-48 md:w-60 md:h-60 object-cover rounded-2xl shadow-lg ring-4 ring-white"
-                                />
-                                <span className="absolute -bottom-3 -right-3 bg-green-500 text-white p-2 rounded-full shadow-lg">
-                                    <FaCheckCircle size={20} />
-                                </span>
-                            </div>
-
-                            <div className="flex-1 text-center md:text-left">
-                                <div className="flex flex-col md:flex-row md:items-center gap-3 mb-2">
-                                    <h1 className="text-4xl font-extrabold text-gray-800">{data?.fullName}</h1>
-                                    <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-semibold w-fit mx-auto md:mx-0">
-                                        Verified Tutor
-                                    </span>
-                                </div>
-                                <p className="text-gray-500 flex items-center justify-center md:justify-start gap-2 text-lg mb-4">
-                                    <FaEnvelope className="text-blue-500" /> {data?.email}
-                                </p>
-                                <div className="flex flex-wrap justify-center md:justify-start gap-4">
-                                    <div className="bg-amber-50 px-4 py-2 rounded-xl border border-amber-100">
-                                        <p className="text-xs text-amber-600 font-bold uppercase tracking-wider">Rating</p>
-                                        <p className="text-lg font-bold flex items-center gap-1">
-                                            4.9 <FaStar className="text-amber-500" size={16} />
-                                        </p>
-                                    </div>
-                                    <div className="bg-indigo-50 px-4 py-2 rounded-xl border border-indigo-100">
-                                        <p className="text-xs text-indigo-600 font-bold uppercase tracking-wider">Hourly Fee</p>
-                                        <p className="text-lg font-bold text-indigo-700">৳ {data?.hourlyFee}</p>
-                                    </div>
-                                </div>
+        <div className="min-h-screen bg-[#F8FAFC] py-8 px-4 md:px-8">
+            <div className="max-w-6xl mx-auto">
+                
+                {/* Header Profile Section */}
+                <div className="relative mb-8">
+                    <div className="h-48 w-full bg-gradient-to-r from-purple-600 to-indigo-600  shadow-lg"></div>
+                    
+                    <div className="absolute -bottom-16 left-8 flex flex-col md:flex-row items-end gap-6 px-4 w-full">
+                        <div className="relative group">
+                            <img
+                                src={data?.photoUrl}
+                                alt={data?.fullName}
+                                className="w-40 h-40 md:w-48 md:h-48 object-cover rounded-md border-8 border-white shadow-xl"
+                            />
+                            <div className="absolute -bottom-2 -right-2 bg-green-500 text-white p-2.5 rounded-2xl border-4 border-white shadow-lg">
+                                <FaCheckCircle size={20} />
                             </div>
                         </div>
+                        
+                        <div className="mb-2 flex-1">
+                            <div className="flex flex-wrap items-center gap-3">
+                                <h1 className="text-3xl md:text-4xl font-black text-gray-900">{data?.fullName}</h1>
+                                <span className="bg-white/90 backdrop-blur-sm text-purple-600 px-4 py-1 rounded-xl text-xs font-black uppercase tracking-widest border border-purple-100 shadow-sm">
+                                    Verified Tutor
+                                </span>
+                            </div>
+                            <p className="text-gray-500 font-medium flex items-center gap-2 mt-2">
+                                <FaEnvelope className="text-purple-400" /> {data?.email}
+                            </p>
+                        </div>
+                    </div>
+                </div>
 
-                        {/* Details Grid Card */}
-                        <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100">
-                            <h3 className="text-xl font-bold mb-6 border-b pb-4">Professional Information</h3>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                                <InfoItem icon={<FaBook color="#3b82f6" />} label="Subject" value={data?.subject} />
-                                <InfoItem icon={<FaUniversity color="#8b5cf6" />} label="Institution" value={data?.institution} />
-                                <InfoItem icon={<FaMapMarkerAlt color="#ef4444" />} label="Location" value={data?.location} />
-                                <InfoItem icon={<FaClock color="#10b981" />} label="Experience" value={data?.experience} />
-                                <InfoItem icon={<FaChalkboardTeacher color="#f59e0b" />} label="Teaching Mode" value={data?.teachingMode} />
-                                <InfoItem icon={<FaCalendarAlt color="#6366f1" />} label="Schedule Time" value={`${data?.startTime} to ${data?.endTime}`} />
+                {/* Spacing for Header */}
+                <div className="h-10 md:h-15"></div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+                    
+                    {/* LEFT CONTENT: Details */}
+                    <div className="lg:col-span-7 space-y-4">
+                        
+                        {/* Quick Stats Grid */}
+                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                            <StatCard icon={<FaStar className="text-amber-500" />} label="Rating" value="4.9 / 5.0" bg="bg-amber-50" />
+                            <StatCard icon={<FaLayerGroup className="text-purple-500" />} label="Hourly Fee" value={`৳${data?.hourlyFee}`} bg="bg-purple-50" />
+                            <StatCard icon={<FaClock className="text-emerald-500" />} label="Experience" value={data?.experience} bg="bg-emerald-50" />
+                        </div>
+
+                        {/* About/Info Card */}
+                        <div className="bg-white rounded-sm p-8 shadow-sm border border-gray-100">
+                            <div className="flex items-center gap-3 mb-8">
+                                <div className="w-1.5 h-8 bg-purple-600 rounded-full"></div>
+                                <h3 className="text-xl font-bold text-gray-900">Professional Profile</h3>
                             </div>
 
-                            <div className="mt-8">
-                                <h4 className="text-gray-900 font-bold mb-3">Availability & Schedule</h4>
-                                <div className="bg-blue-50 p-5 rounded-2xl border border-blue-100 flex items-start gap-4">
-                                    <div className="bg-blue-500 p-3 rounded-xl text-white">
-                                        <FaClock size={20} />
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-8 gap-x-12">
+                                <InfoItem icon={<FaBook />} label="Subject Expertise" value={data?.subject} color="text-blue-600" bg="bg-blue-50" />
+                                <InfoItem icon={<FaUniversity />} label="Educational Institution" value={data?.institution} color="text-indigo-600" bg="bg-indigo-50" />
+                                <InfoItem icon={<FaMapMarkerAlt />} label="Primary Location" value={data?.location} color="text-rose-600" bg="bg-rose-50" />
+                                <InfoItem icon={<FaChalkboardTeacher />} label="Teaching Mode" value={data?.teachingMode} color="text-orange-600" bg="bg-orange-50" />
+                            </div>
+
+                            <div className="mt-12 p-6 bg-slate-50 rounded-sm border border-gray-100">
+                                <div className="flex items-center gap-4 mb-4">
+                                    <div className="bg-white p-3 rounded-2xl shadow-sm">
+                                        <FaCalendarAlt className="text-purple-600" size={20} />
                                     </div>
-                                    <p className="text-blue-900 font-medium leading-relaxed">
-                                        Start Date: {data?.startDate}
-                                        <br />
-                                        <span className="text-blue-600 text-sm font-bold uppercase">
-                                            Total Slots: {data?.totalSlots}
-                                        </span>
-                                    </p>
+                                    <div>
+                                        <p className="text-xs text-gray-400 font-bold uppercase tracking-widest">Schedule Availability</p>
+                                        <p className="text-gray-900 font-bold">{data?.startTime} — {data?.endTime}</p>
+                                    </div>
+                                </div>
+                                <div className="flex flex-wrap gap-3">
+                                    <span className="bg-white px-4 py-2 rounded-xl text-sm font-bold text-gray-600 border border-gray-100">Start Date: {data?.startDate}</span>
+                                    <span className="bg-white px-4 py-2 rounded-xl text-sm font-bold text-gray-600 border border-gray-100">Available Slots: {data?.totalSlots}</span>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    {/* RIGHT SIDE: BOOKING FORM */}
-                    <BookingForm data={data} />
+                    {/* RIGHT SIDE: BOOKING FORM (Sticky) */}
+                    <div className="lg:col-span-5">
+                        <div className="sticky top-8">
+                            <BookingForm data={data} />
+                        </div>
+                    </div>
 
                 </div>
             </div>
@@ -128,12 +119,26 @@ const TutorProfilePage = async ({ params }) => {
     );
 };
 
-const InfoItem = ({ icon, label, value }) => (
-    <div className="flex items-center gap-4 p-3 hover:bg-gray-50 rounded-xl transition-colors">
-        <div className="text-xl">{icon}</div>
+// ছোট স্ট্যাট কার্ড
+const StatCard = ({ icon, label, value, bg }) => (
+    <div className={`${bg} p-5 rounded-3xl border border-white/50 shadow-sm transition-transform hover:scale-105 duration-300`}>
+        <div className="flex items-center gap-2 mb-1">
+            {icon}
+            <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">{label}</p>
+        </div>
+        <p className="text-lg font-black text-gray-800">{value}</p>
+    </div>
+);
+
+// ইনফো আইটেম কার্ড
+const InfoItem = ({ icon, label, value, color, bg }) => (
+    <div className="flex items-start gap-4">
+        <div className={`${bg} ${color} p-3.5 rounded-2xl shadow-sm`}>
+            {React.cloneElement(icon, { size: 20 })}
+        </div>
         <div>
-            <p className="text-xs text-gray-400 font-bold uppercase tracking-wide">{label}</p>
-            <p className="text-gray-700 font-semibold">{value}</p>
+            <p className="text-[10px] text-gray-400 font-black uppercase tracking-[0.15em] mb-1">{label}</p>
+            <p className="text-gray-800 font-bold leading-tight">{value}</p>
         </div>
     </div>
 );
