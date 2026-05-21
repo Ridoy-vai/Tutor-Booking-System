@@ -32,35 +32,7 @@ const Page = () => {
     };
 
     try {
-      // const existingTutors = await fetch(
-      //   `http://localhost:1000/mytutors/${user?.id}`,
-      //   {
-      //     method: "GET",
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //       // authorization: `Bearer ${token}`
-      //     },
-      //   }
-      // );
-
-      // const existingTutorsData = await existingTutors.json();
-
-      // // console.log("Existing tutors:", existingTutorsData);
-
-      // // Duplicate Check
-      // const isDuplicate = existingTutorsData.find(
-      //   (tutor) =>
-      //     tutor.fullName === tutorData.fullName &&
-      //     tutor.subject === tutorData.subject &&
-      //     tutor.startDate === tutorData.startDate &&
-      //     tutor.startTime === tutorData.startTime
-      // );
-
-      // if (isDuplicate) {
-      //   toast.error("You have already posted this tutor profile.");
-      //   setLoading(false);
-      //   return;
-      // }
+     
       console.log("token data :", tokenData);
       if (!tokenData?.token) {
         toast.error("Authentication token not found. Please log in again.");
@@ -68,7 +40,7 @@ const Page = () => {
         return;
       }
 
-      const res = await fetch(`http://localhost:1000/tutors`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URI}/tutors`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -98,7 +70,15 @@ const Page = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-6xl w-full mt-1 mx-auto p-6 bg-white shadow-sm rounded-xl space-y-6">
+    <form onSubmit={handleSubmit} className="max-w-6xl w-full mt-3 mb-3 mx-auto p-6 bg-white shadow-sm rounded-xl space-y-6">
+      
+      {/* Title and Description Section */}
+      <div className="text-center md:text-left border-b pb-4">
+        <h2 className="text-2xl font-extrabold text-gray-800">Post a Tutor Listing</h2>
+        <p className="text-gray-500 text-sm mt-1">
+          Fill in the details below to list your tutoring services and reach the right students.
+        </p>
+      </div>
 
       {/* Personal Info Section */}
       <div className="space-y-4 ">

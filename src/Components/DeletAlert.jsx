@@ -7,7 +7,7 @@ export function DeletAlert({ id, userId, item }) {
   const router = useRouter(); 
   const handleDelete = async () => {
     try {
-      const res = await fetch(`http://localhost:1000/tutors/${userId}/${id}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URI}/tutors/${userId}/${id}`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
       });

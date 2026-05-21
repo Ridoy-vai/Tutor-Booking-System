@@ -32,7 +32,7 @@ export function EaditMybooking({ id, user, item }) {
 
         try {
             const res = await fetch(
-                `http://localhost:1000/tutors/${userId}/${id}`,
+                `${process.env.NEXT_PUBLIC_SERVER_URI}/tutors/${userId}/${id}`,
                 {
                     method: "PATCH",
                     headers: { "Content-Type": "application/json" },

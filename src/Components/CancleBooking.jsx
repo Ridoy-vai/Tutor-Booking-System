@@ -33,7 +33,7 @@ export function CancleBooking({ id, userId, item }) {
         };
 
         try {
-            const res = await fetch(`http://localhost:1000/bookings/${userId}/${id}`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URI}/bookings/${userId}/${id}`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(UpdatebookingData)

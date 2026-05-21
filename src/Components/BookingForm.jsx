@@ -59,7 +59,7 @@ const BookingForm = ({ data }) => {
             // });
             // console.log("Check booking response:", checkData);
 
-            const res = await fetch(`http://localhost:1000/bookings`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URI}/bookings`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(bookingData)
@@ -77,7 +77,7 @@ const BookingForm = ({ data }) => {
             }
 
 
-            const update = await fetch(`http://localhost:1000/tutors/${_id}`, {
+            const update = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URI}/tutors/${_id}`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ totalSlots: totalSlots - 1 })

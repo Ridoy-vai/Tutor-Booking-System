@@ -10,7 +10,7 @@ const TutorProfilePage = async ({ params }) => {
 
     const { id } = await params;
     // console.log(id);
-    const res = await fetch(`http://localhost:1000/tutors/${id}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URI}/tutors/${id}`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",

@@ -17,7 +17,7 @@ const MyTutors = async () => {
     }); //server side e token niye ashar jonno
     // const {clientToken} = await authClient.Token(); //client side e token niye ashar jonno
     try {
-        const res = await fetch(`http://localhost:1000/mytutors/${userId}`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URI}/mytutors/${userId}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",

@@ -10,7 +10,7 @@ import {
 import Link from 'next/link';
 
 const FindTutorPage = async () => {
-    const res = await fetch(`http://localhost:1000/tutors`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URI}/Featurstutors`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -20,7 +20,7 @@ const FindTutorPage = async () => {
 
     const tutors = await res.json();
 
-    const limitedTutors = tutors.slice(0, 6);
+    // const limitedTutors = tutors.slice(0, 6);
 
      return (
         <section className="max-w-7xl mx-auto bg-[#f8fafc] py-16 px-4 sm:px-6 lg:px-8">
@@ -40,9 +40,9 @@ const FindTutorPage = async () => {
                 </div>
 
                 {/* Tutor Cards Grid */}
-                {limitedTutors.length > 0 ? (
+                {tutors.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {limitedTutors.map((tutor) => (
+                        {tutors.map((tutor) => (
                             <div
                                 key={tutor._id}
                                 className="group bg-white border border-gray-200 rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col"

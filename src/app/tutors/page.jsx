@@ -24,7 +24,7 @@ const AllTutorsPage = () => {
   useEffect(() => {
     const fetchTutors = async () => {
       try {
-        const res = await fetch("http://localhost:1000/tutors");
+        const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URI}/tutors`);
         const data = await res.json();
 
         setTutors(data);

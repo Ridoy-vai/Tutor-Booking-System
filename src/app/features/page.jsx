@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 
-const res = await fetch(`http://localhost:1000/tutors`, {
+const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URI}/Featurstutors`, {
     method: "GET",
     headers: { "Content-Type": "application/json" },
     cache: "no-store", // সবসময় fresh data পেতে
