@@ -12,9 +12,9 @@ const subjects = [
 const quickLinks = [
   { label: "Home", href: "/" },
   { label: "All Tutors", href: "/tutors" },
-  { label: "Add Tutor", href: "/add-tutor" },
-  { label: "My Tutors", href: "/my-tutors" },
-  { label: "Booked Sessions", href: "/my-bookings" },
+  { label: "Add Tutor", href: "/addTutor" },
+  { label: "My Tutors", href: "/myTutors" },
+  { label: "Booked Sessions", href: "/bookedSessions" },
 ];
 
 const SocialIcon = ({ href, label, children }) => (

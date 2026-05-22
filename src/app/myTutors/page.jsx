@@ -20,15 +20,14 @@ const MyTutors = async () => {
     let myTutorsDatas = [];
     const { token } = await auth.api.getToken({
         headers: await headers()
-    }); //server side e token niye ashar jonno
-    // const {clientToken} = await authClient.Token(); //client side e token niye ashar jonno
+    });
+
     try {
         const res = await fetch(`https://tutor-booking-system-server.vercel.app/mytutors/${userId}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
                 authorization: `Bearer ${token}`
-                // authorization: `Bearer ${clientToken?.token}`, for client side token
             },
             cache: 'no-store'
         });
@@ -52,7 +51,7 @@ const MyTutors = async () => {
                         Management Dashboard
                     </p>
                     <h1 className="text-3xl sm:text-5xl font-black text-gray-900 leading-tight">
-                        My Tutors List
+                        My Tutors Add List
                     </h1>
                     <p className="text-gray-500 mt-3 text-base max-w-2xl">
                         Manage your teaching profile, availability, and hourly rates from one central dashboard.
@@ -60,7 +59,7 @@ const MyTutors = async () => {
                 </div>
 
                 {/* Stats Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
+                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
                     {[
                         {
                             label: "Total Tutors",
@@ -147,7 +146,7 @@ const MyTutors = async () => {
                                                 </td>
                                                 <td className="px-6 py-4">
                                                     <span className="bg-gray-100 text-gray-700 px-2 py-1 rounded-md text-xs font-bold">
-                                                        totalSlots {item.totalSlots}
+                                                        Slots:{item.totalSlots}
                                                     </span>
                                                 </td>
                                                 <td className="px-6 py-4">
@@ -183,11 +182,11 @@ const MyTutors = async () => {
                                     <div className="grid grid-cols-2 gap-4 bg-gray-50 p-4 rounded-2xl mb-6">
                                         <div>
                                             <p className="text-[10px] text-gray-400 font-bold uppercase">Hourly Fee</p>
-                                            <p className="text-sm font-black text-gray-800">৳{item.tutorhourlyFee}</p>
+                                            <p className="text-sm font-black text-gray-800">${item.tutorhourlyFee}</p>
                                         </div>
                                         <div>
                                             <p className="text-[10px] text-gray-400 font-bold uppercase">Time Slot</p>
-                                            <p className="text-xs font-bold text-gray-700">{item.tutorstartDate}</p>
+                                            <p className="text-xs font-bold text-gray-700">{item.tutorstartTime} - {item.tutorendTime}</p>
                                         </div>
                                     </div>
 

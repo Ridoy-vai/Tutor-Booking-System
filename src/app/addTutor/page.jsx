@@ -135,7 +135,7 @@ const Page = () => {
         {/* Name & Email */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs text-gray-500">Full Name</label>
+            <label className="text-xs text-gray-500">Teacher Full Name</label>
             <input name="TecherName" type="text" placeholder="Rahim Ahmed" className={`w-full text-sm px-3 py-2 rounded-lg border outline-none focus:border-purple-400 ${errors.TecherName ? 'border-red-500' : 'border-gray-200'}`} />
             {errors.TecherName && <p className="text-red-500 text-xs">{errors.TecherName}</p>}
           </div>
@@ -178,12 +178,12 @@ const Page = () => {
         <h3 className="text-sm font-bold uppercase text-gray-400 border-b pb-2">Schedule & Pricing</h3>
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="text-xs text-gray-500">Availability (Start time)</label>
+            <label className="text-xs text-gray-500">Tutor (Start time)</label>
             <input name="tutorstartTime" type="time" className={`w-full text-sm px-3 py-2 rounded-lg border outline-none focus:border-purple-400 ${errors["tutor-startTime"] ? 'border-red-500' : 'border-gray-200'}`} />
             {errors["tutorstartTime"] && <p className="text-red-500 text-xs">{errors["tutorstartTime"]}</p>}
           </div>
           <div>
-            <label className="text-xs text-gray-500">Availability (End time)</label>
+            <label className="text-xs text-gray-500">Tutor (End time)</label>
             <input name="tutorendTime" type="time" className={`w-full text-sm px-3 py-2 rounded-lg border outline-none focus:border-purple-400 ${errors["tutor-endTime"] ? 'border-red-500' : 'border-gray-200'}`} />
             {errors["tutorendTime"] && <p className="text-red-500 text-xs">{errors["tutorendTime"]}</p>}
           </div>
@@ -191,8 +191,8 @@ const Page = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           <div>
-            <label className="text-xs text-gray-500">Hourly Fee (BDT)</label>
-            <input name="tutorhourlyFee" type="number" placeholder="500" className={`w-full text-sm px-3 py-2 rounded-lg border outline-none focus:border-purple-400 ${errors["tutorhourlyFee"] ? 'border-red-500' : 'border-gray-200'}`} />
+            <label className="text-xs text-gray-500">Hourly Fee (USD)</label>
+            <input name="tutorhourlyFee" type="number" placeholder="$ 100" className={`w-full text-sm px-3 py-2 rounded-lg border outline-none focus:border-purple-400 ${errors["tutorhourlyFee"] ? 'border-red-500' : 'border-gray-200'}`} />
             {errors["tutor-hourlyFee"] && <p className="text-red-500 text-xs">{errors["tutorhourlyFee"]}</p>}
           </div>
           <div>
@@ -201,7 +201,7 @@ const Page = () => {
             {errors["tutortotalSlots"] && <p className="text-red-500 text-xs">{errors["tutor-totalSlots"]}</p>}
           </div>
           <div>
-            <label className="text-xs text-gray-500">Start Date</label>
+            <label className="text-xs text-gray-500">Tutor Start Date</label>
             <input name="tutorstartDate" type="date" className={`w-full text-sm px-3 py-2 rounded-lg border outline-none focus:border-purple-400 ${errors["tutorstartDate"] ? 'border-red-500' : 'border-gray-200'}`} />
             {errors["tutor-startDate"] && <p className="text-red-500 text-xs">{errors["tutorstartDate"]}</p>}
           </div>
