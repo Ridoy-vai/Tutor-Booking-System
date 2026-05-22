@@ -14,7 +14,7 @@ const BookingForm = ({ data }) => {
     const userId = user?.id;
     const router = useRouter();
 
-    const { _id, userName, userEmail, userPhoto, TutorBaner, TecherName, TecherEmail, TutorSubject, TutorLocation, TutorerExprence, tutorstartTime, totalSlots, tutorendTime, tutorhourlyFee, tutortotalSlots, tutorstartDate, tutorinstitution, tutorteachingMode } = data;
+    const { _id, userName, userEmail, userPhoto, TutorBaner, TecherName, TecherEmail, TutorSubject, TutorLocation, TutorerExprence, tutorstartTime, totalSlots, tutorendTime, tutorhourlyFee, rating, tutorstartDate, tutorinstitution, tutorteachingMode } = data;
 
     const validate = (formData) => {
         const errors = {};
@@ -77,6 +77,7 @@ const BookingForm = ({ data }) => {
                 StudentMessage: bookingDetails.message,
                 StudentBookingDate: bookingDetails.date,
                 bookingstatus: "pending",
+                rating,
                 userName,
                 userEmail,
                 userPhoto,

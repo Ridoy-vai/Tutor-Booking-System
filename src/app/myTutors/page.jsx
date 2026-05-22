@@ -142,7 +142,7 @@ const MyTutors = async () => {
                                                     {item.tutorstartTime} - {item.tutorendTime}
                                                 </td>
                                                 <td className="px-6 py-4">
-                                                    <p className="text-sm font-black text-gray-800">${item.tutorhourlyFee}<span className="text-[10px] text-gray-400">/hr</span></p>
+                                                    <p className="text-sm font-black text-gray-800">${item.tutorhourlyFee}<span className="text-[10px] text-gray-400">/us</span></p>
                                                 </td>
                                                 <td className="px-6 py-4">
                                                     <span className="bg-gray-100 text-gray-700 px-2 py-1 rounded-md text-xs font-bold">
@@ -181,7 +181,7 @@ const MyTutors = async () => {
 
                                     <div className="grid grid-cols-2 gap-4 bg-gray-50 p-4 rounded-2xl mb-6">
                                         <div>
-                                            <p className="text-[10px] text-gray-400 font-bold uppercase">Hourly Fee</p>
+                                            <p className="text-[10px] text-gray-400 font-bold uppercase">Tutor Fee</p>
                                             <p className="text-sm font-black text-gray-800">${item.tutorhourlyFee}</p>
                                         </div>
                                         <div>

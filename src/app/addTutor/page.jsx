@@ -13,7 +13,7 @@ const Page = () => {
 
   const validate = (formData) => {
     const errors = {};
-    
+
     // ভ্যালুগুলো গেট করা হচ্ছে
     const TutorBaner = formData.get("TutorBaner")?.trim();
     const TecherName = formData.get("TecherName")?.trim();
@@ -57,18 +57,22 @@ const Page = () => {
 
     return errors;
   };
+  const generateRandomRating = () => {
+    return (Math.random() * (10.0 - 3.5) + 3.5).toFixed(1);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const validationErrors = validate(formData);
+    const rating = generateRandomRating()
 
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
     }
 
-    setErrors({}); 
+    setErrors({});
     setLoading(true);
 
     const { data: tokenData } = await authClient.token();
@@ -79,6 +83,7 @@ const Page = () => {
       userName: user?.name,
       userEmail: user?.email,
       userPhoto: user?.image,
+      rating,
       ...Newtutor,
     };
 

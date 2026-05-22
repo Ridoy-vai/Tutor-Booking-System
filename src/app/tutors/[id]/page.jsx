@@ -78,7 +78,7 @@ const TutorProfilePage = async ({ params }) => {
 
                         {/* Quick Stats Grid */}
                         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                            <StatCard icon={<FaStar className="text-amber-500" />} label="Rating" value="4.9 / 5.0" bg="bg-amber-50" />
+                            <StatCard icon={<FaStar className="text-amber-500" />} label="Rating" value={data?.rating ? data?.rating : 'No Rating'} bg="bg-amber-50" />
                             <StatCard icon={<FaLayerGroup className="text-purple-500" />} label="Hourly Fee" value={`$${data?.tutorhourlyFee}`} bg="bg-purple-50" />
                             <StatCard icon={<FaClock className="text-emerald-500" />} label="Experience" value={data?.TutorerExprence} bg="bg-emerald-50" />
                         </div>

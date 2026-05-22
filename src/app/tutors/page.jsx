@@ -18,6 +18,7 @@ const AllTutorsPage = () => {
   const [searchName, setSearchName] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const [showFilters, setShowFilters] = useState(false);
 
   // Fetch Tutors
   useEffect(() => {
@@ -51,43 +52,34 @@ const AllTutorsPage = () => {
     fetchTutors();
   }, []);
 
-  // Filter Logic
   useEffect(() => {
-    let results = tutors;
+    let results = [...tutors];
 
     // Search by Name
-    if (searchName) {
+    if (searchName.trim()) {
       results = results.filter((tutor) =>
-        tutor.fullName
-          ?.toLowerCase()
-          .includes(searchName.toLowerCase())
+        tutor.TecherName?.toLowerCase().includes(searchName.trim().toLowerCase())
       );
     }
 
     // Filter by Date Range
     if (startDate || endDate) {
       results = results.filter((tutor) => {
-        if (!tutor.startDate) return false;
+        const raw = tutor.tutorstartDate;
+        if (!raw) return false;
 
-        const tutorDate = new Date(tutor.startDate);
+        const tutorTime = new Date(raw).getTime();
+        if (isNaN(tutorTime)) return false;
 
-        const filterStart = startDate ? new Date(startDate) : null;
-        const filterEnd = endDate ? new Date(endDate) : null;
+        const startTime = startDate
+          ? new Date(startDate + 'T00:00:00').getTime()
+          : -Infinity;
 
-        let isAfterStart = true;
-        let isBeforeEnd = true;
+        const endTime = endDate
+          ? new Date(endDate + 'T23:59:59').getTime()
+          : Infinity;
 
-        if (filterStart) {
-          filterStart.setHours(0, 0, 0, 0);
-          isAfterStart = tutorDate >= filterStart;
-        }
-
-        if (filterEnd) {
-          filterEnd.setHours(23, 59, 59, 999);
-          isBeforeEnd = tutorDate <= filterEnd;
-        }
-
-        return isAfterStart && isBeforeEnd;
+        return tutorTime >= startTime && tutorTime <= endTime;
       });
     }
 
@@ -95,129 +87,155 @@ const AllTutorsPage = () => {
   }, [searchName, startDate, endDate, tutors]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white py-10 px-4 md:px-10">
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white py-6 md:py-10 px-4 md:px-10">
       <div className="max-w-7xl mx-auto">
-        
-        {/* Header */}
-        <div className="text-center mb-12">
-          <span className="inline-block bg-blue-100 text-blue-600 px-4 py-1 rounded-full text-sm font-semibold mb-4">
-            Find Your Perfect Tutor
-          </span>
 
-          <h1 className="text-4xl md:text-5xl font-black text-gray-900 mb-3">
-            Explore Expert Tutors
-          </h1>
+        {/* Layout Wrapper: Header and Filter */}
+        <div className="flex flex-col gap-8 mb-12">
 
-          <p className="text-gray-500 max-w-2xl mx-auto">
-            Search tutors by name and availability date to find the best tutor
-            for your learning journey.
-          </p>
-        </div>
-
-        {/* Filter Section */}
-        <div className="bg-white/90 backdrop-blur-xl border border-gray-100 shadow-xl rounded-3xl p-6 md:p-8 mb-12">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-11 h-11 rounded-2xl bg-blue-100 flex items-center justify-center">
-              <FaFilter className="text-blue-600" />
-            </div>
-
-            <div>
-              <h2 className="text-xl font-bold text-gray-800">
-                Search Filters
-              </h2>
-              <p className="text-sm text-gray-500">
-                Quickly filter tutors by name and date
-              </p>
-            </div>
+          {/* Header Section - Moved to top for better mobile UX */}
+          <div className="text-center w-full">
+            <span className="inline-block bg-blue-100 text-blue-600 px-4 py-1 rounded-full text-sm font-semibold mb-4">
+              Find Your Perfect Tutor
+            </span>
+            <h1 className="text-3xl md:text-5xl font-black text-gray-900 mb-3">
+              Explore Expert Tutors
+            </h1>
+            <p className="text-gray-500 max-w-2xl mx-auto text-sm md:text-base">
+              Search tutors by name and availability date to find the best tutor
+              for your learning journey.
+            </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-            
-            {/* Search */}
-            <div className="space-y-2">
-              <label className="text-sm font-semibold text-gray-700">
-                Tutor Name
-              </label>
 
-              <div className="relative">
-                <FaSearch className="absolute left-4 top-4 text-gray-400" />
 
-                <input
-                  type="text"
-                  placeholder="Search tutor..."
-                  value={searchName}
-                  onChange={(e) => setSearchName(e.target.value)}
-                  className="w-full pl-11 pr-4 py-3 rounded-2xl border border-gray-200 bg-gray-50 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all"
-                />
+          {/* Filter Section */}
+          <div className="w-full max-w-5xl mx-auto p-4 md:p-5">
+
+            {/* Header */}
+            <div className="flex items-center justify-between gap-3">
+
+              <div className="flex items-center gap-3">
+                <div className="w-11 h-11 rounded-2xl border flex items-center justify-center">
+                  <FaFilter className="text-blue-600 text-sm" />
+                </div>
+
+                <div>
+                  <h2 className="text-lg md:text-xl font-bold text-gray-800">
+                    Search Filters
+                  </h2>
+
+                  <p className="text-xs text-gray-500">
+                    Search tutors easily
+                  </p>
+                </div>
               </div>
-            </div>
 
-            {/* Start Date */}
-            <div className="space-y-2">
-              <label className="text-sm font-semibold text-gray-700">
-                Start Date
-              </label>
-
-              <input
-                type="date"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-                className="w-full px-4 py-3 rounded-2xl border border-gray-200 bg-gray-50 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all"
-              />
-            </div>
-
-            {/* End Date */}
-            <div className="space-y-2">
-              <label className="text-sm font-semibold text-gray-700">
-                End Date
-              </label>
-
-              <input
-                type="date"
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-                className="w-full px-4 py-3 rounded-2xl border border-gray-200 bg-gray-50 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all"
-              />
-            </div>
-
-            {/* Reset Button */}
-            <div className="space-y-2">
-              <label className="text-sm font-semibold text-transparent">
-                Reset
-              </label>
-
+              {/* Toggle Button */}
               <button
-                onClick={() => {
-                  setSearchName("");
-                  setStartDate("");
-                  setEndDate("");
-                }}
-                className="w-full py-3 rounded-2xl bg-gradient-to-r from-red-500 to-pink-500 text-white font-bold shadow-lg hover:scale-[1.02] hover:shadow-xl transition-all"
+                onClick={() => setShowFilters(!showFilters)}
+                className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-300 ${showFilters
+                  ? "bg-red-100 text-red-600"
+                  : "bg-blue-100 text-blue-600"
+                  }`}
               >
-                Reset Filters
+                {showFilters ? "Close" : "Open"}
               </button>
             </div>
+
+            {/* Filters */}
+            <div
+              className={`grid transition-all duration-500 overflow-hidden ${showFilters
+                ? "grid-rows-[1fr] opacity-100 mt-5"
+                : "grid-rows-[0fr] opacity-0 mt-0"
+                }`}
+            >
+              <div className="overflow-hidden">
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+
+                  {/* Search */}
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Tutor Name
+                    </label>
+
+                    <div className="relative">
+                      <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+
+                      <input
+                        type="text"
+                        placeholder="Search tutor..."
+                        value={searchName}
+                        onChange={(e) => setSearchName(e.target.value)}
+                        className="w-full pl-11 pr-4 py-3 rounded-2xl border border-gray-200 bg-gray-50 text-sm outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Start Date */}
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Start Date
+                    </label>
+
+                    <input
+                      type="date"
+                      value={startDate}
+                      onChange={(e) => setStartDate(e.target.value)}
+                      className="w-full px-4 py-3 rounded-2xl border border-gray-200 bg-gray-50 text-sm outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all"
+                    />
+                  </div>
+
+                  {/* End Date */}
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      End Date
+                    </label>
+
+                    <input
+                      type="date"
+                      value={endDate}
+                      onChange={(e) => setEndDate(e.target.value)}
+                      className="w-full px-4 py-3 rounded-2xl border border-gray-200 bg-gray-50 text-sm outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all"
+                    />
+                  </div>
+                </div>
+
+                {/* Reset Button */}
+                <button
+                  onClick={() => {
+                    setSearchName("");
+                    setStartDate("");
+                    setEndDate("");
+                  }}
+                  className="mt-5 px-6 py-3 rounded-2xl bg-gradient-to-r from-red-500 to-pink-500 text-white font-semibold shadow-lg hover:scale-[1.03] active:scale-95 transition-all"
+                >
+                  Reset Filters
+                </button>
+
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Tutors */}
+        {/* Tutors Grid */}
         {loading ? (
           <div className="flex justify-center items-center py-24">
-            <div className="h-14 w-14 rounded-full border-4 border-blue-500 border-t-transparent animate-spin"></div>
+            <div className="h-12 w-12 md:h-14 md:w-14 rounded-full border-4 border-blue-500 border-t-transparent animate-spin"></div>
           </div>
         ) : filteredTutors.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-7">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-7">
             {filteredTutors.map((tutor) => (
               <TutorCard key={tutor._id} tutor={tutor} />
             ))}
           </div>
         ) : (
-          <div className="bg-white rounded-3xl border border-dashed border-gray-300 py-24 text-center shadow-sm">
-            <h3 className="text-2xl font-bold text-gray-700 mb-2">
+          <div className="bg-white rounded-3xl border border-dashed border-gray-300 py-16 md:py-24 text-center shadow-sm px-4">
+            <h3 className="text-xl md:text-2xl font-bold text-gray-700 mb-2">
               No Tutors Found
             </h3>
-
-            <p className="text-gray-500">
+            <p className="text-gray-500 text-sm md:text-base">
               Try changing your search or filter options.
             </p>
           </div>
@@ -227,10 +245,11 @@ const AllTutorsPage = () => {
   );
 };
 
+
 const TutorCard = ({ tutor }) => {
   return (
-    <div className="group bg-white rounded-3xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 flex flex-col">
-      
+    <div className="group bg-white rounded-sm overflow-hidden border border-gray-100 shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 flex flex-col">
+
       {/* Image */}
       <div className="relative overflow-hidden h-56">
         <img
@@ -242,10 +261,10 @@ const TutorCard = ({ tutor }) => {
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
         />
 
-        <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-3 py-1 rounded-xl flex items-center gap-1 shadow">
+        {tutor?.rating ? <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-3 py-1 rounded-xl flex items-center gap-1 shadow">
           <FaStar className="text-yellow-500 text-xs" />
-          <span className="text-xs font-bold text-gray-800">4.9</span>
-        </div>
+          <span className="text-xs font-bold text-gray-800">{tutor?.rating}</span>
+        </div> : ''}
       </div>
 
       {/* Content */}

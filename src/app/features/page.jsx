@@ -13,10 +13,10 @@ import Link from 'next/link';
 
 
 const TutorCard = ({ tutor }) => (
-  <div className="bg-white rounded-[2rem] shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 group">
+  <div className="bg-white rounded-md shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 group">
     {/* Image & Badge */}
-    <div className="relative p-3">
-      <div className="relative h-56 w-full overflow-hidden rounded-[1.8rem]">
+    <div className="relative">
+      <div className="relative h-56 w-full overflow-hidden rounded-md">
         <img
           src={tutor?.TutorBaner || `https://ui-avatars.com/api/?name=${tutor.TecherName}&background=7c3aed&color=fff`}
           alt={tutor.TecherName || "Tutor Avatar"}
@@ -27,7 +27,7 @@ const TutorCard = ({ tutor }) => (
           <span className="text-[10px] font-bold uppercase tracking-wider text-gray-700">{tutor.tutorteachingMode}</span>
         </div>
         <div className="absolute bottom-3 right-3 bg-purple-600 text-white px-4 py-1.5 rounded-full text-sm font-bold shadow-lg">
-          ${tutor.tutorhourlyFee}/hr
+          ${tutor.tutorhourlyFee}/us
         </div>
       </div>
     </div>
@@ -36,10 +36,10 @@ const TutorCard = ({ tutor }) => (
     <div className="px-6 pb-6 pt-2">
       <div className="flex justify-between items-start mb-2">
         <h3 className="text-xl font-bold text-gray-800">{tutor.TecherName}</h3>
-        <div className="flex items-center gap-1 text-orange-500">
+        {tutor?.rating ? <div className="flex items-center gap-1 text-orange-500">
           <Star size={16} fill="currentColor" />
-          <span className="text-sm font-bold">4.9</span>
-        </div>
+          <span className="text-sm font-bold">{tutor?.rating}</span>
+        </div> : ''}
       </div>
 
       <div className="flex items-center gap-2 text-purple-600 font-semibold text-sm mb-4">
@@ -91,10 +91,10 @@ const FeaturesPage = () => {
 
         if (!res.ok) {
           throw new Error(
-              "Failed to fetch featured tutors."
+            "Failed to fetch featured tutors."
           );
         }
-        const responseBody = await res.json();  
+        const responseBody = await res.json();
         setTutors(Array.isArray(responseBody) ? responseBody : []);
       } catch (error) {
         console.error("Failed to fetch featured tutors:", error);
