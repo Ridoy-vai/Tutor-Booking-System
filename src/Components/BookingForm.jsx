@@ -95,7 +95,7 @@ const BookingForm = ({ data }) => {
             };
 
             const bookingres = await fetch(
-                `${process.env.NEXT_PUBLIC_SERVER_URI}/bookings/${userId}/${_id}`,
+                `${process.env.NEXT_PUBLIC_SERVER_URI}/bookings/${userId}`,
                 {
                     method: "GET",
                     headers: {
@@ -105,14 +105,15 @@ const BookingForm = ({ data }) => {
                 }
             );
 
-            const booking = await bookingres.json();
+            const bookings = await bookingres.json();
 
-            const isAlreadyBooked = booking?.some(
-                (book) => book?.secretCode === secretCode
+            // Check duplicate booking
+            const isAlreadyBooked = bookings?.some(
+                (book) => String(book?.secretCode) === String(secretCode)
             );
 
             if (isAlreadyBooked) {
-                toast.error("You already booked");
+                toast.error("You already booked this tutor!");
                 setIsPending(false);
                 return;
             }
