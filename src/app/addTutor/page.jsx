@@ -14,7 +14,6 @@ const Page = () => {
   const validate = (formData) => {
     const errors = {};
 
-    // ভ্যালুগুলো গেট করা হচ্ছে
     const TutorBaner = formData.get("TutorBaner")?.trim();
     const TecherName = formData.get("TecherName")?.trim();
     const TecherEmail = formData.get("TecherEmail")?.trim();
@@ -29,7 +28,7 @@ const Page = () => {
     const institution = formData.get("tutorinstitution")?.trim();
     const teachingMode = formData.get("tutorteachingMode");
 
-    // ভ্যালিডেশন লজিক
+
     if (!TecherName) {
       errors.TecherName = "Name is required";
     } else if (TecherName.length < 3) {
@@ -61,8 +60,40 @@ const Page = () => {
     return (Math.random() * (10.0 - 3.5) + 3.5).toFixed(1);
   };
 
+  const getUniqueSecretCode = async () => {
+    const generateCode = (length = 20) => {
+      const chars =
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-={}[]|:;<>,.?/~";
+
+      let code = "";
+      for (let i = 0; i < length; i++) {
+        code += chars[Math.floor(Math.random() * chars.length)];
+      }
+      return code;
+    };
+
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URI}/tutors`);
+    const tutors = await res.json();
+
+    let code;
+    let exists = true;
+
+    while (exists) {
+      code = generateCode(20);
+
+      exists = tutors.some((t) => t.secretCode === code);
+    }
+
+    return code;
+  };
+
+
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const secretCode = await getUniqueSecretCode();
+    console.log(secretCode);
     const formData = new FormData(e.target);
     const validationErrors = validate(formData);
     const rating = generateRandomRating()
@@ -84,6 +115,7 @@ const Page = () => {
       userEmail: user?.email,
       userPhoto: user?.image,
       rating,
+      secretCode,
       ...Newtutor,
     };
 
