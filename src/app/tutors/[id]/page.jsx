@@ -79,7 +79,7 @@ const TutorProfilePage = async ({ params }) => {
                         {/* Quick Stats Grid */}
                         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                             <StatCard icon={<FaStar className="text-amber-500" />} label="Rating" value="4.9 / 5.0" bg="bg-amber-50" />
-                            <StatCard icon={<FaLayerGroup className="text-purple-500" />} label="Hourly Fee" value={`৳${data?.tutorhourlyFee}`} bg="bg-purple-50" />
+                            <StatCard icon={<FaLayerGroup className="text-purple-500" />} label="Hourly Fee" value={`$${data?.tutorhourlyFee}`} bg="bg-purple-50" />
                             <StatCard icon={<FaClock className="text-emerald-500" />} label="Experience" value={data?.TutorerExprence} bg="bg-emerald-50" />
                         </div>
 
@@ -128,7 +128,7 @@ const TutorProfilePage = async ({ params }) => {
     );
 };
 
-// ছোট স্ট্যাট কার্ড
+
 const StatCard = ({ icon, label, value, bg }) => (
     <div className={`${bg} p-5 rounded-3xl border border-white/50 shadow-sm transition-transform hover:scale-105 duration-300`}>
         <div className="flex items-center gap-2 mb-1">
@@ -139,7 +139,7 @@ const StatCard = ({ icon, label, value, bg }) => (
     </div>
 );
 
-// ইনফো আইটেম কার্ড
+
 const InfoItem = ({ icon, label, value, color, bg }) => (
     <div className="flex items-start gap-4">
         <div className={`${bg} ${color} p-3.5 rounded-2xl shadow-sm`}>

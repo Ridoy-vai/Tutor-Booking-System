@@ -54,7 +54,7 @@ const BookingForm = ({ data }) => {
 
         setErrors({});
 
-        if (tutortotalSlots <= 0) {
+        if (totalSlots <= 0) {
             toast.error("No available slots!");
             return;
         }
@@ -94,7 +94,7 @@ const BookingForm = ({ data }) => {
                 tutorinstitution,
                 tutorteachingMode
             };
-            console.log("Booking data to be sent:", bookingData);
+            
 
             const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URI}/bookings`, {
                 method: "POST",
@@ -207,15 +207,15 @@ const BookingForm = ({ data }) => {
                     {/* BUTTON */}
                     <button
                         type="submit"
-                        disabled={tutortotalSlots <= 0 || isPending}
-                        className={`w-full font-bold py-4 rounded-xl ${tutortotalSlots <= 0 || isPending
+                        disabled={totalSlots <= 0 || isPending}
+                        className={`w-full font-bold py-4 rounded-xl ${totalSlots <= 0 || isPending
                             ? "bg-gray-400 cursor-not-allowed text-white"
                             : "bg-blue-600 hover:bg-blue-700 text-white"
                             }`}
                     >
                         {isPending
                             ? "Processing..."
-                            : tutortotalSlots <= 0
+                            : totalSlots <= 0
                                 ? "No Available Slots"
                                 : "Confirm Booking Request"}
                     </button>

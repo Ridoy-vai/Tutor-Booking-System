@@ -24,7 +24,7 @@ const Page = () => {
     const startTime = formData.get("tutorstartTime");
     const endTime = formData.get("tutorendTime");
     const hourlyFee = formData.get("tutorhourlyFee");
-    const totalSlots = formData.get("tutortotalSlots");
+    const totalSlots = formData.get("totalSlots");
     const startDate = formData.get("tutorstartDate");
     const institution = formData.get("tutorinstitution")?.trim();
     const teachingMode = formData.get("tutorteachingMode");
@@ -50,7 +50,7 @@ const Page = () => {
     if (!startTime) errors["tutorstartTime"] = "Start time is required";
     if (!endTime) errors["tutorendTime"] = "End time is required";
     if (!hourlyFee) errors["tutorhourlyFee"] = "Hourly fee is required";
-    if (!totalSlots) errors["tutortotalSlots"] = "Total slots is required";
+    if (!totalSlots) errors["totalSlots"] = "Total slots is required";
     if (!startDate) errors["tutorstartDate"] = "Start date is required";
     if (!institution) errors["tutorinstitution"] = "Institution is required";
     if (!teachingMode) errors["tutorteachingMode"] = "Teaching mode is required";
@@ -197,8 +197,8 @@ const Page = () => {
           </div>
           <div>
             <label className="text-xs text-gray-500">Total Slots</label>
-            <input name="tutortotalSlots" type="number" placeholder="10" className={`w-full text-sm px-3 py-2 rounded-lg border outline-none focus:border-purple-400 ${errors["tutortotalSlots"] ? 'border-red-500' : 'border-gray-200'}`} />
-            {errors["tutortotalSlots"] && <p className="text-red-500 text-xs">{errors["tutor-totalSlots"]}</p>}
+            <input name="totalSlots" type="number" placeholder="10" className={`w-full text-sm px-3 py-2 rounded-lg border outline-none focus:border-purple-400 ${errors["totalSlots"] ? 'border-red-500' : 'border-gray-200'}`} />
+            {errors["totalSlots"] && <p className="text-red-500 text-xs">{errors["totalSlots"]}</p>}
           </div>
           <div>
             <label className="text-xs text-gray-500">Tutor Start Date</label>
