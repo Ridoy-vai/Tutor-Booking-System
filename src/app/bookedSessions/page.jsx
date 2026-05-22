@@ -27,10 +27,9 @@ const BookedSessions = async () => {
     let myTutorsDatas = [];
     try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URI}/bookings/${userId}`, {
-            // headers: {
-            //     authorization: `Bearer ${token}`,
-            //     // authorization: `Bearer ${clientToken?.token}`, for client side token
-            // },
+            headers: {
+                authorization: `Bearer ${token}`,  
+            },
             cache: 'no-store' // Ensures fresh data
         });
         // const responseBody = await readResponseBody(res);

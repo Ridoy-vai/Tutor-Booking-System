@@ -76,7 +76,7 @@ const MyTutors = async () => {
                         },
                         {
                             label: "Avg. Hourly Fee",
-                            value: `৳${myTutorsDatas.length ? Math.round(myTutorsDatas.reduce((a, b) => a + Number(b.hourlyFee || 0), 0) / myTutorsDatas.length) : 0}`,
+                            value: `${myTutorsDatas.length ? Math.round(myTutorsDatas.reduce((a, b) => a + Number(b.tutorhourlyFee || 0), 0) / myTutorsDatas.length) : 0}`,
                             bgColor: "bg-green-50",
                             textColor: "text-green-700",
                         },
@@ -143,11 +143,11 @@ const MyTutors = async () => {
                                                     {item.tutorstartTime} - {item.tutorendTime}
                                                 </td>
                                                 <td className="px-6 py-4">
-                                                    <p className="text-sm font-black text-gray-800">৳{item.hourlyFee}<span className="text-[10px] text-gray-400">/hr</span></p>
+                                                    <p className="text-sm font-black text-gray-800">${item.tutorhourlyFee}<span className="text-[10px] text-gray-400">/hr</span></p>
                                                 </td>
                                                 <td className="px-6 py-4">
                                                     <span className="bg-gray-100 text-gray-700 px-2 py-1 rounded-md text-xs font-bold">
-                                                        totalSlots
+                                                        totalSlots {item.totalSlots}
                                                     </span>
                                                 </td>
                                                 <td className="px-6 py-4">

@@ -14,25 +14,7 @@ const BookingForm = ({ data }) => {
     const userId = user?.id;
     const router = useRouter();
 
-    const {
-        _id,
-        userName,
-        userEmail,
-        userPhoto,
-        TutorBaner,
-        TecherName,
-        TecherEmail,
-        TutorSubject,
-        TutorLocation,
-        TutorerExprence,
-        tutorstartTime,
-        tutorendTime,
-        tutorhourlyFee,
-        tutortotalSlots,
-        tutorstartDate,
-        tutorinstitution,
-        tutorteachingMode
-    } = data;
+    const { _id, userName, userEmail, userPhoto, TutorBaner, TecherName, TecherEmail, TutorSubject, TutorLocation, TutorerExprence, tutorstartTime, totalSlots, tutorendTime, tutorhourlyFee, tutortotalSlots, tutorstartDate, tutorinstitution, tutorteachingMode } = data;
 
     const validate = (formData) => {
         const errors = {};
@@ -107,7 +89,7 @@ const BookingForm = ({ data }) => {
                 tutorstartTime,
                 tutorendTime,
                 tutorhourlyFee,
-                tutortotalSlots,
+                totalSlots,
                 tutorstartDate,
                 tutorinstitution,
                 tutorteachingMode
@@ -135,7 +117,7 @@ const BookingForm = ({ data }) => {
                     "Content-Type": "application/json",
                     authorization: `Bearer ${tokenData?.token}`
                 },
-                body: JSON.stringify({ totalSlots: tutortotalSlots - 1 })
+                body: JSON.stringify({ totalSlots: totalSlots - 1 })
             });
 
             if (!update.ok) {

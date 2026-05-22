@@ -106,7 +106,7 @@ console.log("Fetched tutor data:", data);
                                 </div>
                                 <div className="flex flex-wrap gap-3">
                                     <span className="bg-white px-4 py-2 rounded-xl text-sm font-bold text-gray-600 border border-gray-100">Start Date: {data?.tutorstartDate}</span>
-                                    <span className="bg-white px-4 py-2 rounded-xl text-sm font-bold text-gray-600 border border-gray-100">Available Slots: {data?.tutortotalSlots}</span>
+                                    <span className="bg-white px-4 py-2 rounded-xl text-sm font-bold text-gray-600 border border-gray-100">Available Slots: {data?.totalSlots}</span>
                                 </div>
                             </div>
                         </div>

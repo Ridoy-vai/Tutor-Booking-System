@@ -1,13 +1,15 @@
 "use client";
+import { authClient } from "@/lib/auth-client";
 import { AlertDialog, Button } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
 export function CancleBooking({ id, userId, item }) {
-    
+
     const router = useRouter();
     const handelcancle = async () => {
-        if(item.bookingstatus === "Cancelled"){
+        const { data: tokenData } = await authClient.token()
+        if (item.bookingstatus === "Cancelled") {
             toast.info("This booking is already cancelled.");
             return;
         }
@@ -33,13 +35,16 @@ export function CancleBooking({ id, userId, item }) {
             bookingstatus: "Cancelled",
         };
 
-        
+
 
         try {
             console.log("Cancelling booking with data:", UpdatebookingData);
             const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URI}/bookings/${userId}/${id}`, {
                 method: "PATCH",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "application/json",
+                    authorization: `Bearer ${tokenData?.token}`
+                },
                 body: JSON.stringify(UpdatebookingData)
             });
 
@@ -49,7 +54,7 @@ export function CancleBooking({ id, userId, item }) {
                 return;
             }
             if (res.ok) {
-                router.refresh(); 
+                router.refresh();
                 toast.success("Booking has been cancelled.");
             } else {
                 toast.error(getResponseMessage(responseBody, "Failed to cancel booking."));
@@ -61,7 +66,7 @@ export function CancleBooking({ id, userId, item }) {
 
     return (
         <AlertDialog>
-            <Button variant="danger">Cancel Booking</Button> 
+            <Button variant="danger">Cancel Booking</Button>
             <AlertDialog.Backdrop>
                 <AlertDialog.Container>
                     <AlertDialog.Dialog className="sm:max-w-100">
@@ -72,7 +77,7 @@ export function CancleBooking({ id, userId, item }) {
                         </AlertDialog.Header>
                         <AlertDialog.Body>
                             <p>
-                                This will permanently cancel your booking for <strong>{item.TutorName}</strong>. 
+                                This will permanently cancel your booking for <strong>{item.TutorName}</strong>.
                                 This action cannot be undone.
                             </p>
                         </AlertDialog.Body>
