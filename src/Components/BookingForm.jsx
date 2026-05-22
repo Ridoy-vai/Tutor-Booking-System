@@ -1,5 +1,4 @@
 'use client';
-
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -14,7 +13,7 @@ const BookingForm = ({ data }) => {
     const userId = user?.id;
     const router = useRouter();
 
-    const { _id, userName, userEmail, userPhoto, TutorBaner, TecherName, TecherEmail, TutorSubject, TutorLocation, TutorerExprence, tutorstartTime, totalSlots, tutorendTime, tutorhourlyFee, rating, tutorstartDate, tutorinstitution, tutorteachingMode } = data;
+    const { _id, userName, userEmail, userPhoto, TutorBaner, TecherName, TecherEmail, TutorSubject, TutorLocation, TutorerExprence, tutorstartTime, totalSlots, tutorendTime, tutorhourlyFee, rating, tutorstartDate, tutorinstitution, tutorteachingMode, secretCode } = data;
 
     const validate = (formData) => {
         const errors = {};
@@ -43,10 +42,8 @@ const BookingForm = ({ data }) => {
 
     const handelBooking = async (e) => {
         e.preventDefault();
-
         const formData = new FormData(e.target);
         const validationErrors = validate(formData);
-
         if (Object.keys(validationErrors).length > 0) {
             setErrors(validationErrors);
             return;
@@ -78,6 +75,7 @@ const BookingForm = ({ data }) => {
                 StudentBookingDate: bookingDetails.date,
                 bookingstatus: "pending",
                 rating,
+                secretCode,
                 userName,
                 userEmail,
                 userPhoto,
@@ -95,7 +93,31 @@ const BookingForm = ({ data }) => {
                 tutorinstitution,
                 tutorteachingMode
             };
-            
+
+            const bookingres = await fetch(
+                `${process.env.NEXT_PUBLIC_SERVER_URI}/bookings/${userId}/${_id}`,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        authorization: `Bearer ${tokenData?.token}`,
+                    },
+                }
+            );
+
+            const booking = await bookingres.json();
+
+            const isAlreadyBooked = booking?.some(
+                (book) => book?.secretCode === secretCode
+            );
+
+            if (isAlreadyBooked) {
+                toast.error("You already booked");
+                setIsPending(false);
+                return;
+            }
+
+
 
             const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URI}/bookings`, {
                 method: "POST",
