@@ -10,6 +10,7 @@ const Page = () => {
   const router = useRouter();
   const { data: session } = authClient.useSession();
   const user = session?.user;
+  const userid = user?.id
 
   const validate = (formData) => {
     const errors = {};
@@ -93,7 +94,6 @@ const Page = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const secretCode = await getUniqueSecretCode();
-    console.log(secretCode);
     const formData = new FormData(e.target);
     const validationErrors = validate(formData);
     const rating = generateRandomRating()
@@ -125,7 +125,38 @@ const Page = () => {
         setLoading(false);
         return;
       }
+      // ==================================
+      // Fetch all tutors
+      const tutorres = await fetch(
+        `https://tutor-booking-system-server.vercel.app/tutors`
+      );
 
+      const tutors = await tutorres.json();
+
+      // Check duplicate tutor
+      const isDuplicate = tutors?.some((tutor) =>
+        String(tutor?.userId) === String(userid) &&
+        String(tutor?.userName) === String(user.name) &&
+        String(tutor?.userEmail) === String(user?.email) &&
+        String(tutor?.userPhoto) === String(user?.image) &&
+        String(tutor?.TutorBaner) === String(Newtutor.TutorBaner) &&
+        String(tutor?.TecherName) === String(Newtutor.TecherName) &&
+        String(tutor?.TecherEmail) === String(Newtutor.TecherEmail) &&
+        String(tutor?.TutorSubject) === String(Newtutor.TutorSubject) &&
+        String(tutor?.TutorLocation) === String(Newtutor.TutorLocation) &&
+        String(tutor?.TutorerExprence) === String(Newtutor.TutorerExprence) &&
+        String(tutor?.tutorhourlyFee) === String(Newtutor.tutorhourlyFee) &&
+        String(tutor?.totalSlots) === String(Newtutor.totalSlots) &&
+        String(tutor?.tutorstartDate) === String(Newtutor.tutorstartDate) &&
+        String(tutor?.tutorinstitution) === String(Newtutor.tutorinstitution) &&
+        String(tutor?.tutorteachingMode) === String(Newtutor.tutorteachingMode)
+      );
+
+      if (isDuplicate) {
+        toast.warning("This tutor already exists. Please change some information.");
+        return;
+      }
+      
       const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URI}/tutors`, {
         method: "POST",
         headers: {

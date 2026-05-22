@@ -28,7 +28,6 @@ const AllTutorsPage = () => {
           cache: "no-store",
         });
         const data = await res.json();
-        console.log("Fetched tutors:", data);
         if (!res.ok) {
           throw new Error(
             typeof data === "object" && data?.message

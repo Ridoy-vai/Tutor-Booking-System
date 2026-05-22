@@ -4,13 +4,13 @@ import { AlertDialog, Button } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
-export function CancleBooking({ id, userId, item }) {
-    
+export function ConfarmBooking({ id, userId, item }) {
+
     const router = useRouter();
     const handelcancle = async () => {
         const { data: tokenData } = await authClient.token()
-        if(item.bookingstatus === "Cancelled"){
-            toast.info("This booking is already cancelled.");
+        if (item.bookingstatus === "Confirmed") {
+            toast.info("This booking is already Confirmed.");
             return;
         }
         const UpdatebookingData = {
@@ -32,17 +32,16 @@ export function CancleBooking({ id, userId, item }) {
             StudentBookingDate: item.StudentBookingDate,
             startDate: item.startDate,
             totalSlots: item.totalSlots,
-            bookingstatus: "Cancelled",
-            secretCode: item.secretCode,
-            rating:item.rating,
+            bookingstatus: "Confirmed",
         };
 
-        
+
 
         try {
             const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URI}/bookings/${userId}/${id}`, {
                 method: "PATCH",
-                headers: { "Content-Type": "application/json" ,
+                headers: {
+                    "Content-Type": "application/json",
                     authorization: `Bearer ${tokenData?.token}`
                 },
                 body: JSON.stringify(UpdatebookingData)
@@ -50,14 +49,14 @@ export function CancleBooking({ id, userId, item }) {
 
             const responseBody = await res.json();
             if (!res.ok) {
-                toast.error("Failed to cancel booking: " + (responseBody?.message || responseBody || "unknown error"));
+                toast.error("Failed to Confirmed booking: " + (responseBody?.message || responseBody || "unknown error"));
                 return;
             }
             if (res.ok) {
-                router.refresh(); 
-                toast.success("Booking has been cancelled.");
+                router.refresh();
+                toast.success("Booking has been Confirmed.");
             } else {
-                toast.error(getResponseMessage(responseBody, "Failed to cancel booking."));
+                toast.error(getResponseMessage(responseBody, "Failed to Confirmed booking."));
             }
         } catch (error) {
             console.error("Error:", error);
@@ -66,18 +65,18 @@ export function CancleBooking({ id, userId, item }) {
 
     return (
         <AlertDialog>
-            <Button className={'bg-orange-400'}>Cancel Booking</Button> 
+            <Button>Confirm Booking</Button>
             <AlertDialog.Backdrop>
                 <AlertDialog.Container>
                     <AlertDialog.Dialog className="sm:max-w-100">
                         <AlertDialog.CloseTrigger />
                         <AlertDialog.Header>
-                            <AlertDialog.Icon status="warning" />
-                            <AlertDialog.Heading>Cancel booking permanently?</AlertDialog.Heading>
+                            <AlertDialog.Icon status="success" />
+                            <AlertDialog.Heading>Confirmed booking permanently?</AlertDialog.Heading>
                         </AlertDialog.Header>
                         <AlertDialog.Body>
                             <p>
-                                This will permanently cancel your booking for <strong>{item.TutorName}</strong>. 
+                                This will permanently Confirmed your booking for <strong>{item.TutorName}</strong>.
                                 This action cannot be undone.
                             </p>
                         </AlertDialog.Body>
@@ -85,8 +84,8 @@ export function CancleBooking({ id, userId, item }) {
                             <Button slot="close" variant="tertiary">
                                 Go Back
                             </Button>
-                            <Button slot="close" className={'bg-orange-400'} onClick={handelcancle}>
-                                Confirm Cancel ooking
+                            <Button slot="close" onClick={handelcancle}>
+                                Confirm Booking
                             </Button>
                         </AlertDialog.Footer>
                     </AlertDialog.Dialog>

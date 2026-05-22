@@ -1,4 +1,5 @@
 import { CancleBooking } from '@/Components/CancleBooking';
+import { ConfarmBooking } from '@/Components/confarmBooking';
 import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
 import Link from 'next/link';
@@ -134,7 +135,8 @@ const BookedSessions = async () => {
                                                 </td>
 
 
-                                                <td className="px-6 py-4">
+                                                <td className="px-6 flex flex-row py-4 gap-2">
+                                                    <ConfarmBooking id={item._id} userId={userId} item={item} />
                                                     <CancleBooking id={item._id} userId={userId} item={item} />
                                                 </td>
                                             </tr>
@@ -159,11 +161,11 @@ const BookedSessions = async () => {
                                             </div>
                                         </div>
                                         <div className="px-6 py-4">
-                                                    <span className={`inline-flex items-center gap-1.5 px-3 py-1 border rounded-full text-[10px] font-black uppercase tracking-wider ${item.bookingstatus === "Cancelled" ? "bg-red-50 text-red-600 border-red-200" : item.bookingstatus === "Confirmed" ? "bg-green-50 text-green-600 border-green-200" : "bg-amber-50 text-amber-600 border-amber-200"}`}>
-                                                        <span className={`w-1.5 h-1.5 rounded-full animate-pulse ${item.bookingstatus === "Cancelled" ? "bg-red-400" : item.bookingstatus === "Confirmed" ? "bg-green-400" : "bg-amber-400"}`}></span>
-                                                        {item.bookingstatus}
-                                                    </span>
-                                                </div>
+                                            <span className={`inline-flex items-center gap-1.5 px-3 py-1 border rounded-full text-[10px] font-black uppercase tracking-wider ${item.bookingstatus === "Cancelled" ? "bg-red-50 text-red-600 border-red-200" : item.bookingstatus === "Confirmed" ? "bg-green-50 text-green-600 border-green-200" : "bg-amber-50 text-amber-600 border-amber-200"}`}>
+                                                <span className={`w-1.5 h-1.5 rounded-full animate-pulse ${item.bookingstatus === "Cancelled" ? "bg-red-400" : item.bookingstatus === "Confirmed" ? "bg-green-400" : "bg-amber-400"}`}></span>
+                                                {item.bookingstatus}
+                                            </span>
+                                        </div>
                                     </div>
 
                                     <div className="grid grid-cols-2 gap-4 bg-slate-50 p-4 rounded-2xl mb-6">
@@ -189,6 +191,7 @@ const BookedSessions = async () => {
 
                                     <div className="flex gap-2">
                                         <div className="w-full">
+                                            <ConfarmBooking id={item._id} userId={userId} item={item} />
                                             <CancleBooking id={item._id} userId={userId} item={item} />
                                         </div>
                                     </div>

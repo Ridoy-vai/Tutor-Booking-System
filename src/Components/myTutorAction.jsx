@@ -13,7 +13,7 @@ export function EaditMybooking({ id, user, item }) {
 
     const userId = user?.id;
 
-    const { TecherEmail, tutorendTime, TutorerExprence, TecherName, tutorhourlyFee, tutorinstitution, TutorLocation, TutorBaner, tutorstartDate, tutorstartTime, TutorSubject, tutorteachingMode, totalSlots,rating } = item || {};
+    const { secretCode, TecherEmail, tutorendTime, TutorerExprence, TecherName, tutorhourlyFee, tutorinstitution, TutorLocation, TutorBaner, tutorstartDate, tutorstartTime, TutorSubject, tutorteachingMode, totalSlots, rating } = item || {};
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -29,6 +29,7 @@ export function EaditMybooking({ id, user, item }) {
             userEmail: user?.email,
             userPhoto: user?.image,
             rating,
+            secretCode,
             ...dataUpdate,
         };
 
